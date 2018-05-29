@@ -42,4 +42,37 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 	public function login(){
 		$this->load->view('Vlogin');
 	}
+
+	public function pPrincipal(){ //Carga la vista Principal (Para los botones de Regresar)
+		$this->load->view('Vadministrador');
+	}
+
+	public function fUserTipe(){ //Funcion para verificar si existe el Usuario
+		//Obtener el usuario y la contraseña del login
+		$usr = strtoupper($this->input->post('usr'));
+		$psw = strtoupper($this->input->post('psw'));
+
+		if (($usr == 'SUPERUSER') && ($psw == '12345')) {
+			$this->load->view('Vadministrador');
+		}else{
+			$psw2 = $this->modelos->verifyPsw($usr); //Obtener la contraseña del usuario ingresado
+			$psw2 = $psw2['contraseña'];
+			if($psw2 == NULL){ //No se econtro contraseña, ese usuario NO existe
+				$this->load->view('Vlogin');
+			}elseif ($psw2 != $psw) { //Se encontro una contraseña, PERO NO COINCIDEN
+				$this->load->view('Vlogin');
+			}else{ //Se Encontro contraseña y SI COINCIDEN
+				//ENTRAR
+				//Se asignan las variables de SESSION (Variables 'superglobales', el NOMBRE de USUARIO), para poder ser utilizadas a lo largo de todo el proyecto
+				$_SESSION["S_usr"]=$usr;
+				$this->load->view('Vadministrador');
+			}
+		}
+	}
+
+	public function CargaVAgregar(){ //Funcion para cargar la ista de agregar al catalogo
+		$this->load->view('VAgregarCat');
+	}
+
+
 }
