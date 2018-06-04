@@ -49,29 +49,50 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 
 	public function fUserTipe(){ //Funcion para verificar si existe el Usuario
 		//Obtener el usuario y la contraseña del login
-		$usr = strtoupper($this->input->post('usr'));
-		$psw = strtoupper($this->input->post('psw'));
-
-		if (($usr == 'SUPERUSER') && ($psw == '12345')) {
-			$this->load->view('Vadministrador');
+		$usr = $this->input->post('usr');
+		$psw = $this->input->post('psw');
+		$datosUsr= $this->modelos->obtenUsrXName($usr);
+		if(!isset($datosUsr)){
+			$this->load->view('Vlogin');
 		}else{
-			$psw2 = $this->modelos->verifyPsw($usr); //Obtener la contraseña del usuario ingresado
-			$psw2 = $psw2['contraseña'];
-			if($psw2 == NULL){ //No se econtro contraseña, ese usuario NO existe
-				$this->load->view('Vlogin');
-			}elseif ($psw2 != $psw) { //Se encontro una contraseña, PERO NO COINCIDEN
-				$this->load->view('Vlogin');
-			}else{ //Se Encontro contraseña y SI COINCIDEN
-				//ENTRAR
-				//Se asignan las variables de SESSION (Variables 'superglobales', el NOMBRE de USUARIO), para poder ser utilizadas a lo largo de todo el proyecto
+			if ($datosUsr['id_empleado'] == $psw) {
 				$_SESSION["S_usr"]=$usr;
 				$this->load->view('Vadministrador');
 			}
 		}
 	}
-
 	public function CargaVAgregar(){ //Funcion para cargar la ista de agregar al catalogo
 		$this->load->view('VAgregarCat');
+	}
+	public function obtenLibro(){
+		$nombre = $this->input->post('nombreLibro');
+		$idLibro = $this->modelos->obtenIdLibro($nombre);
+		//echo json_encode($nombre);
+		
+		if ($idLibro!=NULL) {
+
+			//agregando nuevo indice al array y añadimos las bibliotecas
+			for ($i=0; $i <count($idLibro) ; $i++) {
+
+				$id = $idLibro[$i]['id_libro'];
+				$idLibro[$i]['bibliotecas'] = NULL;
+				$idLibro[$i]['bibliotecas'] = $this->modelos->obtenLibroBiblioteca($id);
+				$bibliotecas[$i]['numero'] = $idLibro[$i]['bibliotecas'];
+				
+				//$prueba = $this->modelos->cuentaLibrosEnBiblio($id,$numbibli);
+				for ($j=0; $j <count($bibliotecas[$i]['numero']) ; $j++) { 
+					$numbibli = $bibliotecas[$i]['numero'][$j]['id_biblioteca'];
+					$idLibro[$i]['bibliotecas'][$j]['noLibros'] = $this->modelos->cuentaLibrosEnBiblio($id,$numbibli);
+				}
+
+			}
+			echo json_encode(var_dump($idLibro));
+			//echo "asdasd";
+			//echo json_encode($prueba);
+			
+		}else{
+			echo"No se encontro el libro";
+		}
 	}
 
 
