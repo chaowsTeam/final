@@ -168,11 +168,11 @@ body {
   </div>
 </div>
 
-	<form method= "post" action="CargaVAgregar">
+	<form method= "post" action="CargaEditorial">
 		<table align="center" style="margin-top: 170px">
 		
   	  		<td align="center" style="padding: 20px" >
-   		 		<input type="submit" value="Agregar Al Catalogo" class="botonVerde" style="width: 200px;" >
+   		 		<input type="submit" value="Catalogo Editorial" class="btn btn-primary" style="width: 200px;" >
    		 	</td>
 	</form>
 
@@ -181,7 +181,7 @@ body {
 		<table align="center">
 		<tr> 
   	  		<td align="center" style="padding: 10px">
-   		 		<input type="submit" value="Hacer una Venta" class="botonVerde" style="width: 200px;"></input>
+   		 		<input type="submit" value="Hacer una Venta" class="btn btn-primary" style="width: 200px;"></input>
    		 	</td>
 </form>
 
@@ -190,7 +190,7 @@ body {
 		<table align="center">
 		<tr>   		
   	  		<td align="center" style="padding: 10px">
-   		 		<input type="submit" value="Hacer una Compra" class="botonVerde" style="width: 200px;"></input>
+   		 		<input type="submit" value="Hacer una Compra" class="btn btn-primary" style="width: 200px;"></input>
    		 	</td>
 	</form>
 
@@ -200,7 +200,7 @@ body {
 		<table align="center">
 		<tr>
   	  		<td align="center" style="padding: 10px">
-   		 		<input type="submit" value="Generar Reporte" class="botonVerde" style="width: 200px;"></input>
+   		 		<input type="submit" value="Generar Reporte" class="btn btn-primary" style="width: 200px;"></input>
    		 	</td>
 	</form>
 
@@ -208,7 +208,7 @@ body {
 		<table align="center">
 		<tr>
   	  		<td align="center" style="padding: 30px">
-   		 		<input   type="submit" value="Salir" class="botonRojo" style="width: 200px;"></input>
+   		 		<input   type="submit" value="Salir" class="btn btn-danger" style="width: 200px;"></input>
    		 	</td>
 	</form>
 

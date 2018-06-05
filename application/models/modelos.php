@@ -13,7 +13,7 @@
 		}
 
 		public function obtenIdLibro($nombre){
-			$query = "SELECT id_libro FROM libro WHERE titulo LIKE '%".$nombre."%' ";
+			$query = "SELECT id_libro, titulo FROM libro WHERE titulo LIKE '%".$nombre."%' ";
 			$resultado = $this->db->query($query);
 			return $resultado->result_array();
 		}
@@ -29,6 +29,18 @@
 			$resultado = $resultado->row_array();
 			$numero = $resultado['num_libros'];
 			return $numero;
+		}
+		public function mostrar($nombre){
+			$query = "SELECT nom_editorial FROM editorial WHERE nom_editorial LIKE '%".$nombre."%' ";
+			$resultado = $this->db->query($query);
+			return $resultado->result();
+		}
+		public function obtenNombreBibli($id){
+			$query = "SELECT nom_biblioteca FROM biblioteca WHERE id_biblioteca = ".$id;
+			$resultado = $this->db->query($query);
+			$resultado = $resultado->row_array();
+			$nombre = $resultado['nom_biblioteca'];
+			return $nombre;	
 		}
 	
 }
