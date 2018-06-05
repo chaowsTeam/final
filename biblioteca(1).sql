@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 05-06-2018 a las 05:00:34
+-- Tiempo de generación: 06-06-2018 a las 01:47:26
 -- Versión del servidor: 10.1.30-MariaDB
 -- Versión de PHP: 7.0.27
 
@@ -123,18 +123,19 @@ INSERT INTO `clasi` (`id_clasificacion`, `nom_clasi`) VALUES
 
 CREATE TABLE `editorial` (
   `id_editorial` int(11) NOT NULL,
-  `nom_editorial` varchar(50) NOT NULL
+  `nom_editorial` varchar(50) NOT NULL,
+  `vigencia` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `editorial`
 --
 
-INSERT INTO `editorial` (`id_editorial`, `nom_editorial`) VALUES
-(1, ' McGraw-Hill'),
-(2, ' CECSA'),
-(3, ' Prentice Hall'),
-(4, ' Grupo Editorial Norma');
+INSERT INTO `editorial` (`id_editorial`, `nom_editorial`, `vigencia`) VALUES
+(1, ' McGraw-Hill', 0),
+(2, ' CECSA', 0),
+(3, ' Prentice Hall', 0),
+(4, ' Grupo Editorial Norma', 0);
 
 -- --------------------------------------------------------
 
@@ -485,7 +486,7 @@ ALTER TABLE `libro_biblioteca`
 -- AUTO_INCREMENT de la tabla `prestamo`
 --
 ALTER TABLE `prestamo`
-  MODIFY `id_prestamo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id_prestamo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `tema`

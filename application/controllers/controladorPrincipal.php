@@ -108,7 +108,8 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 		}
 
 	}
-
+}
+/*
 	public function generaRegistros(){
 		set_time_limit(8640);
 	  	$nombre = array("Diego","Diana","Marcos","Maria","Luis","Fernanda","Irvin","Mario","Katia","Mariana","Jonathan","Juan","Angelo","Francisco","Sara","Ana","Alberto","Jose","Laura","Samantha","Valeria","Giovanny","Guillermo","Uriel","Ramon","Isabel","Hugo","Carla","Martha","Edgar","Marcela","Joshua","Ignacio","Monserrat","Daniel","Paola","Josue","Eva","Elena","Sergio","Lucia","Isai","David","Lourdes","Adrian","Ivanna","Miguel","Abel","Julia","Brenda"); 
@@ -129,17 +130,12 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 	  		$numeroTipoEmpleado = rand(0,1);
 	  		$numeroClaveJefe = rand(1,5);
 
-	  		$nombregeneral = $nombre[$numeroNombre]+" "+$a_paterno[$numeroApellidoP]+" "+$a_materno;
+	  		$nombregeneral = $nombre[$numeroNombre]+$a_paterno[$numeroApellidoP]+$a_materno[$numeroApellidoM];
 
-	  		
-	  		
 	  		$resultado = $this->Usuarios_model->ingresar_usuario($i,$nombre[$numeroNombre],$a_paterno[$numeroApellidoP],$a_materno[$numeroApellidoM],$direccion[$numeroDirecciones],"2017-12-08","",$t_empleado[$numeroTipoEmpleado],$numeroTipoEmpleado,$numeroClaveJefe,"");
 	  		}
 			
 	  	
 	  	
-	  }
+	  }*/
 
-
-
-}
