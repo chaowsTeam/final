@@ -108,7 +108,7 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 		}
 
 	}
-}
+
 /*
 	public function generaRegistros(){
 		set_time_limit(8640);
@@ -138,4 +138,45 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 	  	
 	  	
 	  }*/
+	public function fEditEditoriales(){ //Funcion para cargar la vista que mostrará todos los CATALOGOS
+		//OJO aquí, por la manera en la que se desplegaran los catalogos, primero hay que obtenerlos (planes, carreras, alumnos etc.) para que en la vista a través de un SELECT se deplieguen los que se requieren y eviytar estar haciendo uno por uno
+		//Obtener todos los catalogos de la base de datos
+
+		//Obtener TODAS los EDITORIALES = 0, uno en especifico, entra su id
+		$this->editorialesOrig = $this->modelos->obtenEditoriales(0);
+		$this->lastIdEdit = $this->modelos->obtenLastId();
+
+		//Ya se tiene TODAS las editoriales, solo queda enviarsela a una vista que despliegue los que el usuario quiera en ese momoento
+	
+		$this->load->view('VEditEditorial3', $this->editorialesOrig, $this->lastIdEdit);
+	}
+
+	public function fdoEditorial(){ //Funcion para agregar n editoriales
+		$this->nomEditoriales = $this->input->post('nom');
+		$this->idEditoriales = $this->input->post('id');
+		//Juntar la información en un solo vector (id, nombre)
+		for ($i=0; $i < count($this->nomEditoriales); $i++) { 
+			$j = 0;
+			$this->infoNewEdit[$i][$j] = $this->nomEditoriales[$i];
+			$j = $j+1;
+			$this->infoNewEdit[$i][$j] = $this->idEditoriales[$i];
+		}
+		//Hacer UPDATE  de los cambios en los editoriales
+		$this->modelos->updateEditoriales($_SESSION["editOrig"], $this->infoNewEdit);
+		$this->load->view('vDone');
+	}
+
+	public function fdecideAgregar(){ //Funcion que decide que es lo que se va a agregar, LEE EL SELECT Y DEPENDIENDO DE LO QUE SEA EL select, OBTIENE LA INFORMACION y la afrega a la base
+		$opcion = $this->input	>post('select'); //LEE la opcion del SELEC
+		//Dependiendo de cual sea, se leera la info.
+		if($opcion == 'Empleado'){
+			$this->name = $this->input->post('nom');
+			$this->psw = $this->input->post('psw');
+			//Aregar a la base los datos leidos
+		}elseif($opcion == 'Usuario') {
+			$this->name = $this->input->post('nom');
+			//Agregar a la base de datos
+		}
+	}
+}
 
