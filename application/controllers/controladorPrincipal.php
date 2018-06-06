@@ -144,6 +144,7 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 
 		//Obtener TODAS los EDITORIALES = 0, uno en especifico, entra su id
 		$this->editorialesOrig = $this->modelos->obtenEditoriales(0);
+		$_SESSION["editOrig"] = $this->editorialesOrig;
 		$this->lastIdEdit = $this->modelos->obtenLastId();
 
 		//Ya se tiene TODAS las editoriales, solo queda enviarsela a una vista que despliegue los que el usuario quiera en ese momoento

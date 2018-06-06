@@ -31,28 +31,18 @@
 
 	<form method= "post" action="fEditEditoriales">
 		<table align="center" style="margin-top: 170px">
-		
   	  		<td align="center" style="padding: 10px" >
    		 		<input type="submit" value="Editoriales" class="botonVerde" style="width: 200px;" >
-	<form method= "post" action="CargaEditorial">
-		<table align="center" style="margin-top: 170px">
-		
-  	  		<td align="center" style="padding: 20px" >
-   		 		<input type="submit" value="Catalogo Editorial" class="btn btn-primary" style="width: 200px;" >
-
    		 	</td>
 	</form>
 
 	<form method= "post" action="fVPrestamo">
 		<table align="center">
 		<tr> 
-  	  		<td align="center" style="padding: 10px">
-
-   		 		<input type="submit" value="Prestamos" class="botonVerde" style="width: 200px;"></input>
-   		 		<input type="submit" value="Hacer una Venta" class="btn btn-primary" style="width: 200px;"></input>
-
-   		 	</td>
-</form>
+      <td align="center" style="padding: 10px">
+        <input type="submit" value="Prestamos" class="botonVerde" style="width: 200px;"></input>
+   		</td>
+  </form>
 
 
 	<form method= "post" action="fVCompra">
@@ -61,9 +51,6 @@
   	  		<td align="center" style="padding: 10px">
 
    		 		<input type="submit" value="Devoluciones" class="botonVerde" style="width: 200px;"></input>
-
-   		 		<input type="submit" value="Hacer una Compra" class="btn btn-primary" style="width: 200px;"></input>
-
    		 	</td>
 	</form>
 
@@ -73,7 +60,7 @@
 		<table align="center">
 		<tr>
   	  		<td align="center" style="padding: 10px">
-   		 		<input type="submit" value="Generar Reporte" class="btn btn-primary" style="width: 200px;"></input>
+   		 		<input type="submit" value="Reportes" class="botonVerde" style="width: 200px;"></input>
    		 	</td>
 	</form>
 
@@ -81,7 +68,7 @@
 		<table align="center">
 		<tr>
   	  		<td align="center" style="padding: 30px">
-   		 		<input   type="submit" value="Salir" class="btn btn-danger" style="width: 200px;"></input>
+   		 		<input   type="submit" value="Salir" class="botonRojo" style="width: 200px;"></input>
    		 	</td>
 	</form>
 

@@ -92,7 +92,6 @@
 		}
 
 		public function updateEditoriales($originales, $actualizados){ //Funcion para hacer update a los obtenEditoriales
-
 			for ($i=0; $i < count($originales); $i++) { 
 				$query = "UPDATE editorial SET vigencia = 0";
 				$this->db->query($query);

@@ -98,10 +98,7 @@ th,tr,td {
             }}}else{
                 html="<table> </thead><tbody><tr> <td>No se encontraron registros</td> </tr>";
             }
-
-            
             $("#muestraDatos").html(html);
-           
         }
     });
    }
