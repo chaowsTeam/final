@@ -147,5 +147,10 @@
 			$nombre = $resultado['nom_biblioteca'];
 			return $nombre;	
 		}	
+		public function agregaLibro($titulo, $isbn, $id_clasificacion, $id_editorial){
+			$query = "INSERT INTO libro (id_libro, titulo, ISBN, id_clasificacion, id_editorial) VALUES (NULL,'".$titulo."', '".$isbn."', '".$id_clasificacion."', '".$id_editorial."')";
+			$this->db->query($query);
+
+		}
 		}
 	
