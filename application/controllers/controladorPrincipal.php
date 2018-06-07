@@ -69,6 +69,66 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 	public function CargaVAgregar(){ //Funcion para cargar la ista de agregar al catalogo
 		$this->load->view('VAgregarCat');
 	}
+
+	public function generaRepo1(){ //Funcion para obtener datos del REPORTE1
+		$tituloLibro = $this->input->post('tituloLibro');
+		$nomBiblio = $this->input->post('nomBiblio');
+		if(($tituloLibro != 'vacio') and ($nomBiblio!='vacio')){ //Si hay AMBOS FILSTROS 
+		
+		}elseif (($tituloLibro != 'vacio') and ($nomBiblio == 'vacio')) { //NO hay FILTRO BIBLIOTECA
+			$idLibro = $this->modelos->obtenIdLibro($tituloLibro);
+			for ($i=0; $i <count($idLibro) ; $i++) {
+				$id = $idLibro[$i]['id_libro'];
+				$idLibro[$i]['bibliotecas'] = NULL;
+				$idLibro[$i]['bibliotecas'] = $this->modelos->obtenLibroBiblioteca($id);
+				$bibliotecas[$i]['numero'] = $idLibro[$i]['bibliotecas'];
+				for ($j=0; $j <count($bibliotecas[$i]['numero']) ; $j++) { 
+					$numbibli = $bibliotecas[$i]['numero'][$j]['id_biblioteca'];
+					$idLibro[$i]['bibliotecas'][$j]['noLibros'] = $this->modelos->cuentaLibrosEnBiblio($id,$numbibli);
+					$idLibro[$i]['bibliotecas'][$j]['id_biblioteca'] = $this->modelos->obtenNombreBibli($numbibli); 
+				}
+				
+			}
+			$idLibro[0]['total'] = 0;
+			for ($i=0; $i < count($idLibro[0]['bibliotecas']); $i++) { 
+				$idLibro[0]['total'] = intval($idLibro[0]['bibliotecas'][$i]['noLibros']) + $idLibro[0]['total'];
+			}
+			//Obtener los autores del libro seleccionado
+			$idLibro[0]['autores'] = $this->modelos->obtenAutores($idLibro[0]['id_libro'], 1);
+			echo json_encode($idLibro);
+		}
+	}
+
+	public function generaPDFRepo1(){
+		$tituloLibro = $this->input->post('tituloLibro');
+		$nomBiblio = $this->input->post('nomBiblio');
+		if(($tituloLibro != 'vacio') and ($nomBiblio!='vacio')){ //Si hay AMBOS FILSTROS 
+		
+		}elseif (($tituloLibro != 'vacio') and ($nomBiblio == 'vacio')) { //NO hay FILTRO BIBLIOTECA
+			$idLibro = $this->modelos->obtenIdLibro($tituloLibro);
+			for ($i=0; $i <count($idLibro) ; $i++) {
+				$id = $idLibro[$i]['id_libro'];
+				$idLibro[$i]['bibliotecas'] = NULL;
+				$idLibro[$i]['bibliotecas'] = $this->modelos->obtenLibroBiblioteca($id);
+				$bibliotecas[$i]['numero'] = $idLibro[$i]['bibliotecas'];
+				for ($j=0; $j <count($bibliotecas[$i]['numero']) ; $j++) { 
+					$numbibli = $bibliotecas[$i]['numero'][$j]['id_biblioteca'];
+					$idLibro[$i]['bibliotecas'][$j]['noLibros'] = $this->modelos->cuentaLibrosEnBiblio($id,$numbibli);
+					$idLibro[$i]['bibliotecas'][$j]['id_biblioteca'] = $this->modelos->obtenNombreBibli($numbibli); 
+				}
+				
+			}
+			$idLibro[0]['total'] = 0;
+			for ($i=0; $i < count($idLibro[0]['bibliotecas']); $i++) { 
+				$idLibro[0]['total'] = intval($idLibro[0]['bibliotecas'][$i]['noLibros']) + $idLibro[0]['total'];
+			}
+			$idLibro[0]['autores'] = $this->modelos->obtenAutores($idLibro[0]['id_libro'], 1);
+			var_dump($idLibro[0]['autores']);
+			die();
+			
+		}
+	}
+
 	public function obtenLibro(){
 		$nombre = $this->input->post('nombreLibro');
 		$idLibro = $this->modelos->obtenIdLibro($nombre);
@@ -138,10 +198,7 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 	  	
 	  	
 	  }*/
-	public function fEditEditoriales(){ //Funcion para cargar la vista que mostrará todos los CATALOGOS
-		//OJO aquí, por la manera en la que se desplegaran los catalogos, primero hay que obtenerlos (planes, carreras, alumnos etc.) para que en la vista a través de un SELECT se deplieguen los que se requieren y eviytar estar haciendo uno por uno
-		//Obtener todos los catalogos de la base de datos
-
+	public function fEditEditoriales(){ 
 		//Obtener TODAS los EDITORIALES = 0, uno en especifico, entra su id
 		$this->editorialesOrig = $this->modelos->obtenEditoriales(0);
 		$_SESSION["editOrig"] = $this->editorialesOrig;
@@ -167,17 +224,12 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 		$this->load->view('vDone');
 	}
 
-	public function fdecideAgregar(){ //Funcion que decide que es lo que se va a agregar, LEE EL SELECT Y DEPENDIENDO DE LO QUE SEA EL select, OBTIENE LA INFORMACION y la afrega a la base
-		$opcion = $this->input	>post('select'); //LEE la opcion del SELEC
-		//Dependiendo de cual sea, se leera la info.
-		if($opcion == 'Empleado'){
-			$this->name = $this->input->post('nom');
-			$this->psw = $this->input->post('psw');
-			//Aregar a la base los datos leidos
-		}elseif($opcion == 'Usuario') {
-			$this->name = $this->input->post('nom');
-			//Agregar a la base de datos
-		}
+	public function fcargaVRepo(){ //Funcion para cargar la vista de los reportes
+		$this->titulos = $this->modelos->obtenTitulos();
+		$this->biblios = $this->modelos->obtenBiblios(0);
+		$this->load->view('vReportes', $this->titulos, $this->biblios);
 	}
+
+
 }
 
