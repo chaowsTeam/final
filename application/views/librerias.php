@@ -23,8 +23,13 @@
 
     <!-- Custom styles for this template -->
     <link href="starter-template.css" rel="stylesheet">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine">
-<style type="text/css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine">
+    <script lenguage="javascript" type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+    <script lenguage="javascript" type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine">
+    <style type="text/css">
 
   body.smooth_scroll {
     overflow-y: auto;
@@ -164,7 +169,7 @@
   
 
 	body{
-    kkkbackground-image: url(https://wallpapercave.com/wp/VyuQp6b.jpg);
+    background-image: url(https://wallhere.com/es/wallpaper/161460);
 		background-position: center center;
 		background-repeat: no-repeat;
 		background-attachment: fixed;
