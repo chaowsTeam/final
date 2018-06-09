@@ -200,5 +200,21 @@
 			$nombre = $resultado['nom_biblioteca'];
 			return $nombre;	
 		}	
-	}
+
+		public function agregaLibro($titulo, $isbn, $id_clasificacion, $id_editorial){
+			$query = "INSERT INTO libro (id_libro, titulo, ISBN, id_clasificacion, id_editorial) VALUES (NULL,'".$titulo."', '".$isbn."', '".$id_clasificacion."', '".$id_editorial."')";
+			$this->db->query($query);
+
+		}
+		public function agregaLibroBiblioteca($idlibro,$idbiblio,$prestamo){
+			$query = "INSERT INTO libro_biblioteca (num_inv, id_libro, id_biblioteca, prestado) VALUES (NULL, '".$idlibro."', '".$idbiblio."', '".$prestamo."')";
+			
+			$this->db->query($query);
+		}
+		public function agregarPrestamos($id_empleado,$id_usuario,$num_inve,$fecha_prest){
+			$query = "INSERT INTO prestamo (id_empleado, id_prestamo, id_usuario, num_inve, fecha_prest, fecha_dev) VALUES ('".$id_empleado."', NULL, '".$id_usuario."', '".$num_inve."', '".$fecha_prest."', '".$fecha_prest."')";
+		}
+}
+
+	
 	

@@ -215,6 +215,53 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 
 	}
 
+	public function registroLibrosAleatorios(){
+		set_time_limit(14000);
+				$conect = array("La","El", "Los", "Con", "En");
+				$verbos = array("Abandonar","Abochornar","Abrazar","Abrir","Acabar","Aceptar","Acompañar","Acordar","Acosar","Acostumbrar","Actuar","Adjetivar","Administrar","Admitir","Adquirir","Advertir","Afectar","Afirmar","Agarrar","Ahogar","Amar","Amasar","Amedrentar","Amotinar","Animar","Aniquilar","Añorar","Apabullar","Apachurrar","Aplanar","Aportar","Aprender","Apretar","Bailar","Bajar","Beber","Besar","Brincar","Buscar","Caminar");
+
+				$adjetivos = array("a muerte","a primera sangre","abierta","abiertas","abierto","abiertos","abrumador","abrumadoras","abrumadores","abrupta","abruptas","abrupto","abruptos","absoluta","absolutas","absoluto","absolutos","abstracta","abstractas","abstracto" ,"abstractos" ,"absurda" ,"absurdas" ,"absurdo" ,"absurdos" ,"abundante" ,"abundantes" ,"abundosa" ,"abundosas" ,"abundoso" ,"abundosos" ,"académica" ,"Académicas" ,"académico" ,"académicos" ,"aceptable" ,"aceptables" ,"acertada" ,"acertadas" ,"acertado" ,"acertados" ,"ácida" ,"ácidas" ,"ácido" ,"ácidos" ,"activa" ,"activas" ,"activo" ,"activos" ,"actual" ,"actuales" ,"acuosa" ,"acuosas" ,"acuoso" ,"acuosos" ,"adecuada","adecuadas" ,"adecuado" ,"adecuados" ,"adicional" ,"adicionales" ,"administrativa" ,"administrativas" ,"administrativo","administrativos","amarilla","amarillas","amarillo","amarillos","ambiciosa","ambiciosas","ambicioso","ambiciosos","ambiental","ambientales","ambigua","ambiguas","amiguo","ambiguos");
+				for ($i=0; $i <100000 ; $i++) { 
+			  		# code...
+			  	
+				  	$indexConector = rand(0,4);
+				  	$isbn = rand(10,99).rand(10,99).rand(10,99).rand(10,99);
+				  	$id_clasificacion = rand(1,5);
+				  	$id_editorial = rand(1,7);
+				  	$indexVerbo = rand(0,39);
+				  	$indexAdjetivos = rand(0,78);
+				  	$titulo = $verbos[$indexVerbo]." ".$conect[$indexConector]." ".$adjetivos[$indexAdjetivos];
+				  	$this->modelos->agregaLibro($titulo, $isbn, $id_clasificacion, $id_editorial);	
+			  	}
+
+	}
+	public function agregaLibroBiblioteca(){
+		set_time_limit(14000);
+		for ($i=0; $i <50000 ; $i++) { 
+			# code...
+		
+			$id_libro= rand(1,100229);
+			$id_biblioteca = rand(1,5);
+			$prestado = rand(0,1);
+			$this->modelos->agregaLibroBiblioteca($id_libro,$id_biblioteca,$prestado);
+	}	
+}
+
+	public function agregaPrestamos(){
+		set_time_limit(14000);
+		$id_empleado = rand(1,2);
+		$id_usuario = rand(1,2);
+		$num_inve= rand(1,100229);
+		$fecha_prest = "2018-".rand(1,12)."-".rand(1,30);
+		 $this->db->modelos->agregarPrestamos($id_empleado,$id_usuario,$num_inve,$fecha_prest);
+
+	}
+
+
+
+
+
+
 /*
 	public function generaRegistros(){
 		set_time_limit(8640);
