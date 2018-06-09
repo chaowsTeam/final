@@ -15,6 +15,8 @@
 	<!-- Optional theme -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
 	<!-- Latest compiled and minified JavaScript siempre hay algo de demencia en el amor, pero siempre hay tambien algo de razon en la demencia-->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 	<link rel="stylesheet" type="text/css" href="style.css">
@@ -29,11 +31,10 @@
 
     <script lenguage="javascript" type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine">
-    <style type="text/css">
 
-  body.smooth_scroll {
-    overflow-y: auto;
-  }
+
+<style type="text/css">
+
 
 .content {
   position: absolute;
@@ -170,12 +171,12 @@
 
 	body{
     background-image: url(https://wallhere.com/es/wallpaper/161460);
-		background-position: center center;
+    background-position: center center;
 		background-repeat: no-repeat;
 		background-attachment: fixed;
 		background-size: cover;
 	}form{
-		color: white;
+		color: black;
 	}
 
 
