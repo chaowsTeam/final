@@ -76,8 +76,11 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 	public function generaRepo1(){ //Funcion para obtener datos del REPORTE1
 		$tituloLibro = $this->input->post('tituloLibro');
 		$nomBiblio = $this->input->post('nomBiblio');
-		if(($tituloLibro != 'vacio') and ($nomBiblio!='vacio')){ //Si hay AMBOS FILSTROS 
+		$idBiblio = $this->modelos->obtenIdBiblio($nomBiblio);
 		
+		if(($tituloLibro == 'vacio') and ($nomBiblio == 'vacio')){ //NO HAY NINGUN FILTRO
+			$infoRepo['indicador'] = 0;
+			echo json_encode($infoRepo);
 		}elseif (($tituloLibro != 'vacio') and ($nomBiblio == 'vacio')) { //NO hay FILTRO BIBLIOTECA
 			$idLibro = $this->modelos->obtenIdLibro($tituloLibro);
 			for ($i=0; $i <count($idLibro) ; $i++) {
@@ -90,7 +93,6 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 					$idLibro[$i]['bibliotecas'][$j]['noLibros'] = $this->modelos->cuentaLibrosEnBiblio($id,$numbibli);
 					$idLibro[$i]['bibliotecas'][$j]['id_biblioteca'] = $this->modelos->obtenNombreBibli($numbibli); 
 				}
-				
 			}
 			$idLibro[0]['total'] = 0;
 			for ($i=0; $i < count($idLibro[0]['bibliotecas']); $i++) { 
@@ -98,15 +100,44 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 			}
 			//Obtener los autores del libro seleccionado
 			$idLibro[0]['autores'] = $this->modelos->obtenAutores($idLibro[0]['id_libro'], 1);
+			$idLibro['indicador'] = 1;
 			echo json_encode($idLibro);
+		}elseif(($tituloLibro == 'vacio') and ($nomBiblio != 'vacio')){ //NO HAY FILTRO DE TITULO PERO SI DE BIBLIOTECA
+
+			$infoRepo['indicador'] = 2;
+			$infoRepo['totalGlobal'] = 0;
+			$infoRepo['biblioteca'] = $nomBiblio;
+			//Obtener TODOS los libros de esa biblioteca y autores de cada libro 
+			$infoRepo['libros'] = $this->modelos->obtenLibros($idBiblio,1);
+			for ($i=0; $i < count($infoRepo['libros']) ; $i++) { 
+				$idLibro = $this->modelos->obtenIdLibro2($infoRepo['libros'][$i]['titulo'], 1);
+				$totalLibro = $this->modelos->cuentaLibrosEnBiblio2($idLibro,$idBiblio);
+				$infoRepo['libros'][$i]['cantidad'] = $totalLibro;
+				$infoRepo['libros'][$i]['autores']= $this->modelos->obtenAutores($idLibro, 1);
+
+				$infoRepo['totalGlobal'] = $infoRepo['totalGlobal'] + intval($totalLibro);
+			}
+			echo json_encode($infoRepo);			
+		}elseif (($tituloLibro != 'vacio') and ($nomBiblio != 'vacio')) { //Hay AMBOS filtros
+			$infoRepo['biblioteca'] = $nomBiblio;
+			$infoRepo['nomLibro'] = $tituloLibro;
+			//Obtener el autor de ese libro
+			$id_libro = $this->modelos->obtenIdLibro2($tituloLibro, 1);
+			$infoRepo['autores'] =$this->modelos->obtenAutores($id_libro, 1);
+			//Obtener la cantidad de un libro especifico en una biblioteca especifica 
+			$infoRepo['cantidad'] = $this->modelos->cuentaLibrosEnBiblio2($id_libro,$idBiblio);
+			$infoRepo['indicador'] = 3;
+			echo json_encode($infoRepo);
 		}
 	}
 
 	public function generaPDFRepo1(){
 		$tituloLibro = $this->input->post('tituloLibro');
 		$nomBiblio = $this->input->post('nomBiblio');
-		if(($tituloLibro != 'vacio') and ($nomBiblio!='vacio')){ //Si hay AMBOS FILSTROS 
+		$idBiblio = $this->modelos->obtenIdBiblio($nomBiblio);
 		
+		if(($tituloLibro != 'vacio') and ($nomBiblio!='vacio')){ //Si hay AMBOS FILSTROS 
+
 		}elseif (($tituloLibro != 'vacio') and ($nomBiblio == 'vacio')) { //NO hay FILTRO BIBLIOTECA
 			$idLibro = $this->modelos->obtenIdLibro($tituloLibro);
 			for ($i=0; $i <count($idLibro) ; $i++) {
@@ -119,16 +150,31 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 					$idLibro[$i]['bibliotecas'][$j]['noLibros'] = $this->modelos->cuentaLibrosEnBiblio($id,$numbibli);
 					$idLibro[$i]['bibliotecas'][$j]['id_biblioteca'] = $this->modelos->obtenNombreBibli($numbibli); 
 				}
-				
 			}
 			$idLibro[0]['total'] = 0;
 			for ($i=0; $i < count($idLibro[0]['bibliotecas']); $i++) { 
 				$idLibro[0]['total'] = intval($idLibro[0]['bibliotecas'][$i]['noLibros']) + $idLibro[0]['total'];
 			}
+			//Obtener los autores del libro seleccionado
 			$idLibro[0]['autores'] = $this->modelos->obtenAutores($idLibro[0]['id_libro'], 1);
-			var_dump($idLibro[0]['autores']);
-			die();
-			
+			$idLibro[0]['indicador'] = 1;
+			echo json_encode($idLibro);
+		}elseif(($tituloLibro == 'vacio') and ($nomBiblio != 'vacio')){ //NO HAY FILTRO DE TITULO PERO SI DE BIBLIOTECA
+
+			$infoRepo['indicador'] = 2;
+			$infoRepo['biblioteca'] = $nomBiblio;
+			//Obtener TODOS los libros de esa biblioteca y autores de cada libro 
+			$infoRepo['libros'] = $this->modelos->obtenLibros($idBiblio,1);
+			for ($i=0; $i < count($infoRepo['libros']) ; $i++) { 
+				$idLibro = $this->modelos->obtenIdLibro2($infoRepo['libros'][$i]['titulo'], 1);
+				$totalLibro = $this->modelos->cuentaLibrosEnBiblio2($idLibro,$idBiblio);
+	
+				$infoRepo['libros'][$i]['cantidad'] = $totalLibro;
+				
+				$infoRepo['libros'][$i]['autores']= $this->modelos->obtenAutores($idLibro, 1);
+
+			}
+			echo json_encode($infoRepo);			
 		}
 	}
 
@@ -289,4 +335,3 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 
 
 }
-

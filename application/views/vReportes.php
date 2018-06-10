@@ -11,12 +11,6 @@
 <?php
 	$this->load->view('librerias');
 ?>
-<link href="Starter%20Template%20for%20Bootstrap_files/bootstrap.css" rel="stylesheet">
-<link href="Starter%20Template%20for%20Bootstrap_files/starter-template.css" rel="stylesheet">
-<script src="Starter%20Template%20for%20Bootstrap_files/jquery-1.js"></script>
-<script src="Starter%20Template%20for%20Bootstrap_files/bootstrap.js"></script>
-<link href="Starter%20Template%20for%20Bootstrap_files/bootstrap.css" rel="stylesheet">
-<link href="Starter%20Template%20for%20Bootstrap_files/starter-template.css" rel="stylesheet">
 <title>Reportes</title>
 <script lenguage="javascript" type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine">
@@ -36,34 +30,65 @@
   function repo1(){
     var tituloLibro = document.getElementById('tituloLibro').value;
     var nomBiblio = document.getElementById('nomBiblio').value;
+    console.log('Ttulo del libro: ');
+    console.log(tituloLibro);
+    console.log('Nom Biblio: ');
+    console.log(nomBiblio);
+
     $.ajax({
-        url:"http://localhost/final/index.php/ControladorPrincipal/generaRepo1",
-        type:"POST",
-        data:{tituloLibro:tituloLibro, nomBiblio:nomBiblio},
-        success: function(respuesta){
-             registros = eval(respuesta);
-            //console.log(variable[0]['titulo']); aqui se obtiene el nombre
-            //console.log(variable[0]['bibliotecas'][0]); accede al un dato de un biblioteca
-            //console.log(variable[0]['bibliotecas'][0]['id_biblioteca']); accede al nombre de una biblioteca 
-            //console.log(variable[0]['bibliotecas'][0]['noLibros']); accede al numero de libros que tiene una biblioteca 
-            //console.log(registros[1]['bibliotecas'].length);
-            //console.log(registros[0]["bibliotecas"][0]["id_biblioteca"]);
-            console.log("Total: ");
-            console.log(registros[0]['total']);
-           if (registros!=""){
-            html = "<table style='width: 700px;' class='table table-responsive table-bordered' align="+"center"+"><thead>";
-            html +="<tr><th>Titulo</th><th>Autores</th><th>Biblioteca</th><th>Unidades sisponibles</th></th>";//nombre de los campos a mostrar
-            html += "</thead><tbody>";
-            for (var i=0; i<registros.length; i++){
-                for (var j=0; j<(registros[i]["bibliotecas"]).length; j++){
-                console.log(i,j);
-                html+="<tr><td></td><td>"+registros[0]['autores']+"</td><td>"+registros[i]["bibliotecas"][j]["id_biblioteca"]+"</td><td>"+registros[i]["bibliotecas"][j]["noLibros"]+"</td> ";
-            }}}else{
-                html="<table></thead><tbody><tr> <td>No se encontraron registros</td> </tr>";
+      url:"http://localhost/final/index.php/ControladorPrincipal/generaRepo1",
+      type:"POST",
+      data:{tituloLibro:tituloLibro, nomBiblio:nomBiblio},
+      success: function(respuesta){
+        //console.log(respuesta);
+        var registros = JSON.parse(respuesta);
+        console.log(registros);
+        //registros = eval(respuesta);
+
+        if(registros!=''){
+
+          if (registros['indicador'] == 0) {
+            alert('Selecciona algún filtro');
+          }
+
+          if(registros['indicador'] == 1){
+            html = "<table><td><input readonly value='"+registros[0]["titulo"]+"' class='form-control' type='text' name='titulo' id='titulo' style='width: 260px; margin-left: 420px; margin-bottom: 30px;'></td><td></input><input readonly value='"+registros[0]["autores"]+"' class='form-control' type='text' name='autores' id='autores' style='width: 480px; margin-bottom: 30px; margin-left: 50px;'></td></table>";
+
+            html += "<table style='width: 300px;' class='table table-responsive table-bordered' align="+"center"+"><thead>";
+
+            html +="<tr><th>Biblioteca</th><th>Unidades disponibles</th></th>";
+
+            //html += "</thead><tbody>";
+            for (var i=0; i<1; i++){
+              for (var j=0; j<(registros[i]['bibliotecas']).length; j++){
+                html+="<tr><td>"+registros[i]['bibliotecas'][j]['id_biblioteca']+"</td><td align='center'>"+registros[i]['bibliotecas'][j]['noLibros']+"</td> ";
+              }
             }
-            html+="<tr><th align="+"center"+">Total</th><th> </th><th> </th><th>"+registros[0]['total']+"</th></th>"
-            $("#muestraDatos").html(html);
+            html+="<tr><th>Total</th><th align='center'>"+registros[0]['total']+"</th>";
+          }
+
+          if (registros['indicador'] == 2) {
+              html = "<table><td><input readonly value='"+registros["biblioteca"]+"' class='form-control' type='text' name='titulo' id='titulo' style='width: 260px; margin-left: 420px; margin-bottom: 30px;'></td><td></input><td></table>";
+
+              html += "<table style='width: 500px;' class='table table-responsive table-bordered' align="+"center"+"><thead>";
+
+              html +="<tr><th>Libro</th><th>Autor(es)</th><th>Unidades Disponibles</th></th>";
+
+              for (var i=0; i<registros['libros'].length; i++){
+                html+="<tr><td>"+registros['libros'][i]['titulo']+"</td><td align='center'>"+registros['libros'][i]['autores']+"</td><td>"+registros['libros'][i]['cantidad']+"</td> ";
+              }
+
+              html+="<tr><th>Total</th><th></th><th align='center'>"+registros['totalGlobal']+"</th>";
+          }
+
+          if (registros['indicador'] == 3) {
+            html = "<table><td><input readonly value='"+registros["nomLibro"]+"' class='form-control' type='text' name='titulo' id='titulo' style='width: 260px; margin-left: 220px; margin-bottom: 30px;'></td><td></input><input readonly value='"+registros["autores"]+"' class='form-control' type='text' name='autores' id='autores' style='width: 480px; margin-bottom: 30px; margin-left: 50px;'></td><td>Total: <input readonly value='"+registros["cantidad"]+"' class='form-control' type='text' name='titulo' id='titulo' style='width: 40px; margin-left: 20px; margin-bottom: 30px;'></td></table>";
+          }
         }
+        $("#muestraDatos").html(html);
+      }      
+
+
     });
   }
 </script>

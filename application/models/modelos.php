@@ -59,12 +59,25 @@
 			}
 		}
 
-		public function obtenLibros($indi){
+		public function obtenLibros($idBiblio,$indi){ //0 TODOS los libros, 1 de una BIBLIOTECA 
 			if ($indi == 0) {
 				$query = "SELECT * FROM libro";
 				$resultado = $this->db->query($query);
 				return $resultado->result_array();
+			}elseif ($indi == 1) {
+				$query = "SELECT DISTINCT titulo FROM libro, libro_biblioteca, biblioteca WHERE libro."."id_libro = libro_biblioteca."."id_libro AND libro_biblioteca."."id_biblioteca = biblioteca."."id_biblioteca AND biblioteca."."id_biblioteca = '".$idBiblio."'";
+				$resultado = $this->db->query($query);
+				$resultado = $resultado->result_array();
+				return($resultado);
 			}
+		}
+
+		public function obtenIdBiblio($nomBiblio){ //Funcion para obtener el id de una biblioteca
+			$query = "SELECT id_biblioteca FROM biblioteca WHERE nom_biblioteca = '".$nomBiblio."'";
+			$resultado = $this->db->query($query);
+			$resultado = $resultado->row_array();
+			$resultado = $resultado['id_biblioteca'];
+			return($resultado);
 		}
 
 		public function obtenTemas($indi){
@@ -139,8 +152,8 @@
 			} else { //Obtener el ID  de UN SOLO LIBRO
 				$query = "SELECT id_libro FROM libro WHERE titulo = '".$nombre."'";
 				$resultado = $this->db->query($query);
-				$resultado = $resultado->result_array();
-				$resultado = $resultado[0]['id_libro'];
+				$resultado = $resultado->row_array();
+				$resultado = $resultado['id_libro'];
 				return($resultado);
 			}
 			
@@ -158,8 +171,16 @@
 			return $resultado->result_array();
 		}
 
-		public function cuentaLibrosEnBiblio($idlibro, $idbiblio){
+		public function cuentaLibrosEnBiblio($idlibro, $idbiblio){ //Le importa si LOS LIRBOS ESTAN PRESTADOS a diferencia de la de abajo 
 			$query = "SELECT COUNT(id_libro) as num_libros FROM libro_biblioteca WHERE id_libro = ".$idlibro." and prestado=0 and id_biblioteca = ".$idbiblio;
+			$resultado = $this->db->query($query);
+			$resultado = $resultado->row_array();
+			$numero = $resultado['num_libros'];
+			return $numero;
+		}
+
+		public function cuentaLibrosEnBiblio2($idlibro, $idbiblio){ //La misma de la de arriba SIN IMPORTAR SI ESTAN RPESTADOS LOS LIBROS LOS CUENYTA, PARA REPORTES!!!
+			$query = "SELECT COUNT(id_libro) as num_libros FROM libro_biblioteca WHERE id_libro = ".$idlibro."  and id_biblioteca = ".$idbiblio;
 			$resultado = $this->db->query($query);
 			$resultado = $resultado->row_array();
 			$numero = $resultado['num_libros'];
