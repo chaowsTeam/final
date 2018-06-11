@@ -1,10 +1,14 @@
 <?php
+use Spipu\Html2Pdf\Html2Pdf;
 session_start(); //Se inicia una session, para poder usar el tipo de usuario y nombre a lo largo del proyecto
 defined('BASEPATH') OR exit('No direct script access allowed');
+
 
 //WINDOWS:
  require('C:\xampp\fpdf\fpdf.php'); //Libreria para la creación de PDF´s
 //UBUNTU: require('/opt/lampp/htdocs/fpdf/fpdf.php');
+
+
 
 class PDF extends FPDF{ //Clase que extiende de FPDF,
 
@@ -14,24 +18,26 @@ class PDF extends FPDF{ //Clase que extiende de FPDF,
 		$this->Cell(35,1,$date,0,1,'C');
 	}
 
-	/**function Footer(){
+	/*function Footer(){
 		//Imagen de footer
 		//Para WINDOWS:
 		//$this->Image('C:\xampp\fpdf\footerUaemex.png',2,25,15,3);
 
 		//Para UBUNTU:
 		$this->Image('/opt/lampp/htdocs/fpdf/footerUaemex.jpeg',2,25,15,3);
-	}*/
-	function SetDash($black=false, $white=false)
-    {
+	}
+
+	function SetDash($black=false, $white=false){
         if($black and $white)
             $s=sprintf('[%.3f %.3f] 0 d', $black*$this->k, $white*$this->k);
         else
             $s='[] 0 d';
         $this->_out($s);
-    }
+    }*/
 
 }
+
+
 class ControladorPrincipal extends CI_Controller { //Definición principal
 
 	public function __construct(){ //Definición del modelo
@@ -89,6 +95,7 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 		$tituloLibro = $this->input->post('tituloLibro');
 		$nomBiblio = $this->input->post('nomBiblio');
 		$idBiblio = $this->modelos->obtenIdBiblio($nomBiblio);
+
 		
 		if(($tituloLibro == 'vacio') and ($nomBiblio == 'vacio')){ //NO HAY NINGUN FILTRO
 			$infoRepo['indicador'] = 0;
@@ -143,51 +150,114 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 		}
 	}
 
-	public function generaPDFRepo1(){
-		$tituloLibro = $this->input->post('tituloLibro');
-		$nomBiblio = $this->input->post('nomBiblio');
-		$idBiblio = $this->modelos->obtenIdBiblio($nomBiblio);
-		
-		if(($tituloLibro != 'vacio') and ($nomBiblio!='vacio')){ //Si hay AMBOS FILSTROS 
+	public function fPDFRepo1(){ //Funcion para generar el PDF del reporte 1
+		//Como hay varios filtros y opciones, el reporte se arma dependiendo cual sea la opcion
+		/*require __DIR__.'/vendor/autoload.php';
+		$html = $_REQUEST['valDiv'];
 
-		}elseif (($tituloLibro != 'vacio') and ($nomBiblio == 'vacio')) { //NO hay FILTRO BIBLIOTECA
-			$idLibro = $this->modelos->obtenIdLibro($tituloLibro);
-			for ($i=0; $i <count($idLibro) ; $i++) {
-				$id = $idLibro[$i]['id_libro'];
-				$idLibro[$i]['bibliotecas'] = NULL;
-				$idLibro[$i]['bibliotecas'] = $this->modelos->obtenLibroBiblioteca($id);
-				$bibliotecas[$i]['numero'] = $idLibro[$i]['bibliotecas'];
-				for ($j=0; $j <count($bibliotecas[$i]['numero']) ; $j++) { 
-					$numbibli = $bibliotecas[$i]['numero'][$j]['id_biblioteca'];
-					$idLibro[$i]['bibliotecas'][$j]['noLibros'] = $this->modelos->cuentaLibrosEnBiblio($id,$numbibli);
-					$idLibro[$i]['bibliotecas'][$j]['id_biblioteca'] = $this->modelos->obtenNombreBibli($numbibli); 
-				}
-			}
-			$idLibro[0]['total'] = 0;
-			for ($i=0; $i < count($idLibro[0]['bibliotecas']); $i++) { 
-				$idLibro[0]['total'] = intval($idLibro[0]['bibliotecas'][$i]['noLibros']) + $idLibro[0]['total'];
-			}
-			//Obtener los autores del libro seleccionado
-			$idLibro[0]['autores'] = $this->modelos->obtenAutores($idLibro[0]['id_libro'], 1);
-			$idLibro[0]['indicador'] = 1;
-			echo json_encode($idLibro);
-		}elseif(($tituloLibro == 'vacio') and ($nomBiblio != 'vacio')){ //NO HAY FILTRO DE TITULO PERO SI DE BIBLIOTECA
+		$Html2Pdf = new Html2Pdf('P', 'A4', 'es', 'true', 'UTF-8');
+		$Html2Pdf->writeHTML($html);
+		$Html2Pdf->output('ahuevo.pdf');
+		*/
+		$opc = $this->input->post('opcionhidden');
 
-			$infoRepo['indicador'] = 2;
-			$infoRepo['biblioteca'] = $nomBiblio;
-			//Obtener TODOS los libros de esa biblioteca y autores de cada libro 
-			$infoRepo['libros'] = $this->modelos->obtenLibros($idBiblio,1);
-			for ($i=0; $i < count($infoRepo['libros']) ; $i++) { 
-				$idLibro = $this->modelos->obtenIdLibro2($infoRepo['libros'][$i]['titulo'], 1);
-				$totalLibro = $this->modelos->cuentaLibrosEnBiblio2($idLibro,$idBiblio);
-	
-				$infoRepo['libros'][$i]['cantidad'] = $totalLibro;
-				
-				$infoRepo['libros'][$i]['autores']= $this->modelos->obtenAutores($idLibro, 1);
+		if($opc=='1'){ //Solo hay filtro de  TITULO
+			//Obtener la informacion de la vista
+			$header = $this->input->post('header');
+			$header = explode(",", $header);
+			$bibliotecas = $this->input->post('biblioteca');
+			$cants = $this->input->post('cant');
+			$total = $this->input->post('total');
 
+			//Ya se tiene la informacion, se genera el reporte!
+			$nombre = "Titulo: ".$header[0].", Autor(es): ".$header[1];
+			$totalText = 'Total';
+
+			$pdf = new PDF('P', 'cm', 'a4');
+			$pdf->AddPage();
+			
+			$pdf->SetFont('Times','BU',14);
+			$pdf->Cell(19,1,$nombre,0,0,'C');
+			$pdf->Ln(1);
+			$pdf->Ln(1);
+			$pdf->SetFont('Times','B',14);
+			$pdf->SetDrawColor(0,80,180);
+			$pdf->SetFillColor(430,430,10);
+			$pdf->SetLineWidth(0.08);
+			$pdf->Cell(3, 1, "Biblioteca", 1, 0, 'C');
+			$pdf->Cell(5, 1, "Unidades Disponibles", 1, 1, 'C');
+			$pdf->Ln();
+			$pdf->SetFont('Times','',12);
+
+			for ($i=0; $i < count($bibliotecas); $i++) {
+				$pdf->Cell(3, 1, $bibliotecas[$i], 1, 0, 'C');
+				$pdf->Cell(5, 1, $cants[$i], 1, 1, 'C');
 			}
-			echo json_encode($infoRepo);			
+			$pdf->Cell(3, 1, $totalText, 1, 0, 'C');
+			$pdf->Cell(5, 1, $total, 1, 1, 'C');
+
+			$pdf->Output();
+			
+		}elseif($opc=='2') { //Solo hay filtro de BIBLIOTECA
+			$biblio = $this->input->post('bibliO');
+			$total = $this->input->post('total');
+			$libros = $this->input->post('libro');
+			$autores = $this->input->post('autores');
+			$cant = $this->input->post('unid');
+			
+			//Ya se tiene la informacion, se genera el reporte!
+			$nombre = "Biblioteca: ".$biblio;
+			$totalText = 'Total';
+
+			$pdf = new PDF('P', 'cm', 'a4');
+			$pdf->AddPage();
+			
+			$pdf->SetFont('Times','BU',14);
+			$pdf->Cell(19,1,$nombre,0,0,'C');
+			$pdf->Ln(1);
+			$pdf->Ln(1);
+			$pdf->SetFont('Times','B',14);
+			$pdf->SetDrawColor(0,80,180);
+			$pdf->SetFillColor(430,430,10);
+			$pdf->SetLineWidth(0.08);
+			$pdf->Cell(6, 1, "Libro", 1, 0, 'C');
+			$pdf->Cell(5, 1, "Autor(es)", 1, 0, 'C');
+			$pdf->Cell(5, 1, "Unidades Disponibles", 1, 1, 'C');
+			$pdf->Ln();
+			$pdf->SetFont('Times','',12);
+
+			for ($i=0; $i < count($libros); $i++) {
+				$pdf->Cell(6, 1, $libros[$i], 1, 0, 'C');
+				$pdf->Cell(5, 1, $autores[$i], 1, 0, 'C');
+				$pdf->Cell(5, 1, $cant[$i], 1, 1, 'C');
+			}
+			$pdf->Ln();
+			$pdf->Cell(11, 1, $totalText, 1, 0, 'C');
+			$pdf->Cell(5, 1, $total, 1, 1, 'C');
+
+			$pdf->Output();
+		}elseif ($opc=='3') {
+			$cantidad = $this->input->post('cantidadL');
+			$nomL = $this->input->post('nomL');
+			$biblioteca = $this->input->post('biblioteca');
+
+			//Ya se tiene la informacion, se genera el reporte!
+			$nombre = "Hay: ".$cantidad." Ejemplar(es) de: ".$nomL;
+			$nombre2 = "En la biblioteca: ".$biblioteca;
+
+			$pdf = new PDF('P', 'cm', 'a4');
+			$pdf->AddPage();
+			
+			$pdf->SetFont('Arial','B',18);
+			$pdf->Cell(19,1,$nombre,0,0,'C');
+			$pdf->ln();
+			$pdf->Cell(19,1,$nombre2,0,1,'C');
+
+			$pdf->Output();
 		}
+	}
+
+	public function fExcelRepo1(){ //Funcion para el excel del reporte 1
 	}
 
 	public function obtenLibro(){
