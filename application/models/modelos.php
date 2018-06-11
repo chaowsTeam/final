@@ -102,6 +102,13 @@
 				return $resultado->result_array();
 			}
 		}
+		public function obtenLastIdTemas(){
+			$query = "SELECT MAX(id_tema) as maxid FROM tema";
+			$respuesta = $this->db->query($query);
+			$respuesta= $respuesta->row_array();
+			$respuesta = intval($respuesta['maxid']);
+			return($respuesta);
+		}
 
 		public function obtenUsuarios($indi){
 			if ($indi == 0) {
@@ -165,7 +172,7 @@
 			if ($indi == 0) { //Obtener el ID de TODOS los libros
 				# code...
 			} else { //Obtener el ID  de UN SOLO LIBRO
-				$query = "SELECT id_libro FROM libro WHERE titulo = '".$nombre."'";
+				$query = "SELECT id_libro FROM libro WHERE titulo = '".$nombre."' ";
 				$resultado = $this->db->query($query);
 				$resultado = $resultado->row_array();
 				$resultado = $resultado['id_libro'];
@@ -175,7 +182,7 @@
 		}
 
 		public function obtenIdLibro($nombre){
-			$query = "SELECT id_libro, titulo FROM libro WHERE titulo LIKE '%".$nombre."%' ";
+			$query = "SELECT id_libro, titulo FROM libro WHERE titulo LIKE '%".$nombre."%' limit 1,30";
 			$resultado = $this->db->query($query);
 			return $resultado->result_array();
 		}
@@ -218,7 +225,8 @@
 
 		public function agregaLibro($titulo, $isbn, $id_clasificacion, $id_editorial){
 			$query = "INSERT INTO libro (id_libro, titulo, ISBN, id_clasificacion, id_editorial) VALUES (NULL,'".$titulo."', '".$isbn."', '".$id_clasificacion."', '".$id_editorial."')";
-			$this->db->query($query);
+			$respuesta = $this->db->query($query);
+			return $respuesta;
 
 		}
 		public function agregaLibroBiblioteca($idlibro,$idbiblio,$prestamo){
@@ -238,6 +246,67 @@
 			$res = $resultado['num_inv'];
 			return $res;
 			
+		}
+		
+		public function obtenLastIdAutor(){
+			$query = "SELECT MAX(id_autor) as maxid FROM autor";
+			$respuesta = $this->db->query($query);
+			$respuesta= $respuesta->row_array();
+			$respuesta = intval($respuesta['maxid']);
+			return($respuesta);
+
+		}
+		public function updateAutores($originales, $actualizados){ //Funcion para hacer update a los obtenEditoriales
+			for ($i=0; $i < count($originales); $i++) { 
+				$query = "UPDATE autor SET vigencia = 0";
+				$this->db->query($query);
+			}
+
+			for ($i=0; $i < count($actualizados); $i++) { 
+				$query = "INSERT INTO autor (id_autor, nom_autor, vigencia) VALUES ('".$actualizados[$i][1]."','".$actualizados[$i][0]."', 1) ON DUPLICATE KEY UPDATE nom_autor = '".$actualizados[$i][0]."', vigencia = 1 ";
+				$this->db->query($query);	
+			}
+
+			/*
+			//Por cuestiones de logica, borrar LOGICAMENTE todos los editoriales (un 0 en el campo de vigencia)
+			for ($i=0; $i < count($originales); $i++) { 
+				$query = "UPDATE editorial SET vigencia = 0";
+				$this->db->query($query);
+			}
+			//UN vez con los datos borrados logicamente, hacer la actualizacion de todos los demas datos
+			for ($i=0; $i < count($actualizados); $i++) { 
+				$query = "UPDATE editorial SET nom_editorial = '".$actualizados[$i][0]."', vigencia = 1 WHERE id_editorial = '".$actualizados[$i][1]."'";
+				$this->db->query($query);
+
+				$query = "INSERT editorial"
+			}
+			*/
+		}
+		public function updateTemas($originales, $actualizados){ //Funcion para hacer update a los obtenEditoriales
+			for ($i=0; $i < count($originales); $i++) { 
+				$query = "UPDATE tema SET vigencia = 0";
+				$this->db->query($query);
+			}
+
+			for ($i=0; $i < count($actualizados); $i++) { 
+				$query = "INSERT INTO tema (id_tema, nom_tema, vigencia) VALUES ('".$actualizados[$i][1]."','".$actualizados[$i][0]."', 1) ON DUPLICATE KEY UPDATE nom_tema = '".$actualizados[$i][0]."', vigencia = 1 ";
+				$this->db->query($query);	
+			}
+
+			/*
+			//Por cuestiones de logica, borrar LOGICAMENTE todos los editoriales (un 0 en el campo de vigencia)
+			for ($i=0; $i < count($originales); $i++) { 
+				$query = "UPDATE editorial SET vigencia = 0";
+				$this->db->query($query);
+			}
+			//UN vez con los datos borrados logicamente, hacer la actualizacion de todos los demas datos
+			for ($i=0; $i < count($actualizados); $i++) { 
+				$query = "UPDATE editorial SET nom_editorial = '".$actualizados[$i][0]."', vigencia = 1 WHERE id_editorial = '".$actualizados[$i][1]."'";
+				$this->db->query($query);
+
+				$query = "INSERT editorial"
+			}
+			*/
 		}
 }
 

@@ -58,6 +58,12 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 	public function devol(){
 		$this->load->view('VDevolucion');
 	}
+	public function fVCapturaLibros(){
+		$this->load->view('VCaptura');
+	}
+	public function CargaVAgregar(){ //Funcion para cargar la ista de agregar al catalogo
+		$this->load->view('VAgregarCat');
+	}
 
 	public function fUserTipe(){ //Funcion para verificar si existe el Usuario
 		//Obtener el usuario y la contraseña del login
@@ -75,8 +81,14 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 			}
 		}
 	}
-	public function CargaVAgregar(){ //Funcion para cargar la ista de agregar al catalogo
-		$this->load->view('VAgregarCat');
+	public function agregaNombreLibros(){
+		$titulo = $this->input->post('nombreLibro');
+		$isbn = $this->input->post('isbn');
+		$tema = $this->input->post('tema');
+		$edit = $this->input->post('edit');
+		$respuesta = $this->modelos->agregaLibro($titulo, $isbn,$tema, $edit);
+
+		echo json_encode($respuesta);
 	}
 
 	public function generaRepo1(){ //Funcion para obtener datos del REPORTE1
@@ -579,6 +591,32 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 		$this->load->view('VEditEditorial3', $this->editorialesOrig, $this->lastIdEdit);
 	}
 
+	public function agregaAutor(){
+		$this->autoresOrig = $this->modelos->obtenAutores(0,0);
+		$_SESSION["autorOrig"] = $this->autoresOrig;
+		$this->lastIdAutor = $this->modelos->obtenLastIdAutor();
+
+		//Ya se tiene TODAS las editoriales, solo queda enviarsela a una vista que despliegue los que el usuario quiera en ese momoento
+	
+		$this->load->view('VADDautor', $this->autoresOrig, $this->lastIdAutor);
+	}
+
+	public function agregaTemas(){
+		$this->temasOrig = $this->modelos->obtenTemas(0);
+		$_SESSION["temasOrig"] = $this->temasOrig;
+		$this->lastIdTemas = $this->modelos->obtenLastIdTemas();
+
+		//Ya se tiene TODAS las editoriales, solo queda enviarsela a una vista que despliegue los que el usuario quiera en ese momoento
+	
+		$this->load->view('VADDtemas', $this->temasOrig, $this->lastIdTemas);
+	}
+
+	public function agregarLibros(){
+		$this->temas = $this->modelos->obtenTemas(0);
+		$this->editoriales = $this->modelos->obtenEditoriales(0);
+		$this->load->view('VADDLibros',$this->temas,$this->editoriales);
+	}
+
 	public function fdoEditorial(){ //Funcion para agregar n editoriales
 		$this->nomEditoriales = $this->input->post('nom');
 		$this->idEditoriales = $this->input->post('id');
@@ -593,6 +631,38 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 		$this->modelos->updateEditoriales($_SESSION["editOrig"], $this->infoNewEdit);
 		$this->load->view('vDone');
 	}
+	public function fdoAutor(){
+		$this->nomAutor = $this->input->post('nom');
+		$this->idAutor = $this->input->post('id');
+		//Juntar la información en un solo vector (id, nombre)
+		for ($i=0; $i < count($this->nomAutor); $i++) { 
+			$j = 0;
+			$this->infoNewEdit2[$i][$j] = $this->nomAutor[$i];
+			$j = $j+1;
+			$this->infoNewEdit2[$i][$j] = $this->idAutor[$i];
+		}
+		//Hacer UPDATE  de los cambios en los editoriales
+		$this->modelos->updateAutores($_SESSION["editOrig"], $this->infoNewEdit2);
+		$this->load->view('vDone2downLevel');
+	}
+	public function fdoTema(){
+		$this->nomTema = $this->input->post('nom');
+		$this->idTema = $this->input->post('id');
+		//Juntar la información en un solo vector (id, nombre)
+		for ($i=0; $i < count($this->nomTema); $i++) { 
+			$j = 0;
+			$this->infoNewEdit2[$i][$j] = $this->nomTema[$i];
+			$j = $j+1;
+			$this->infoNewEdit2[$i][$j] = $this->idTema[$i];
+		}
+		//Hacer UPDATE  de los cambios en los editoriales
+		$this->modelos->updateTemas($_SESSION["editOrig"], $this->infoNewEdit2);
+		$this->load->view('vDone2downLevel');
+
+	}
+
+
+
 
 	public function fcargaVRepo(){ //Funcion para cargar la vista de los reportes
 		$this->titulos = $this->modelos->obtenTitulos();
