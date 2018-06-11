@@ -45,7 +45,7 @@
   </form>
 
 
-	<form method= "post" action="fVCompra">
+	<form method= "post" action="devol">
 		<table align="center">
 		<tr>   		
   	  		<td align="center" style="padding: 10px">

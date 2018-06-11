@@ -213,6 +213,16 @@
 		}
 		public function agregarPrestamos($id_empleado,$id_usuario,$num_inve,$fecha_prest){
 			$query = "INSERT INTO prestamo (id_empleado, id_prestamo, id_usuario, num_inve, fecha_prest, fecha_dev) VALUES ('".$id_empleado."', NULL, '".$id_usuario."', '".$num_inve."', '".$fecha_prest."', '".$fecha_prest."')";
+			$this->db->query($query);
+		}
+
+		public function buscaNumInv($id_biblioteca){
+			$query = "SELECT num_inv from libro_biblioteca WHERE id_biblioteca='".$id_biblioteca."'";
+			$resultado = $this->db->query($query);
+			$resultado = $resultado->row_array();
+			$res = $resultado['num_inv'];
+			return $res;
+			
 		}
 }
 

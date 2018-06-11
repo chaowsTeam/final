@@ -55,6 +55,9 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 	public function CargaEditorial(){
 		$this->load->view('editorial');
 	}
+	public function devol(){
+		$this->load->view('VDevolucion');
+	}
 
 	public function fUserTipe(){ //Funcion para verificar si existe el Usuario
 		//Obtener el usuario y la contraseña del login
@@ -284,9 +287,8 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 		}
 
 	}
-
 	public function registroLibrosAleatorios(){
-		set_time_limit(14000);
+		//set_time_limit(14000);
 				$conect = array("La","El", "Los", "Con", "En");
 				$verbos = array("Abandonar","Abochornar","Abrazar","Abrir","Acabar","Aceptar","Acompañar","Acordar","Acosar","Acostumbrar","Actuar","Adjetivar","Administrar","Admitir","Adquirir","Advertir","Afectar","Afirmar","Agarrar","Ahogar","Amar","Amasar","Amedrentar","Amotinar","Animar","Aniquilar","Añorar","Apabullar","Apachurrar","Aplanar","Aportar","Aprender","Apretar","Bailar","Bajar","Beber","Besar","Brincar","Buscar","Caminar");
 
@@ -306,7 +308,7 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 
 	}
 	public function agregaLibroBiblioteca(){
-		set_time_limit(14000);
+		//set_time_limit(14000);
 		for ($i=0; $i <50000 ; $i++) { 
 			# code...
 		
@@ -318,12 +320,20 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 }
 
 	public function agregaPrestamos(){
-		set_time_limit(14000);
+		//set_time_limit(14000);
+		for ($i=0; $i <50000 ; $i++) { 
+			# code...
+		
 		$id_empleado = rand(1,2);
 		$id_usuario = rand(1,2);
-		$num_inve= rand(1,100229);
+		//$num_inve= rand(1,50052);
 		$fecha_prest = "2018-".rand(1,12)."-".rand(1,30);
-		 $this->db->modelos->agregarPrestamos($id_empleado,$id_usuario,$num_inve,$fecha_prest);
+		$id_biblioteca = rand(1,5);
+		$num_inve = $this->modelos->buscaNumInv($id_biblioteca);
+
+		 $this->modelos->agregarPrestamos($id_empleado,$id_usuario,$num_inve,$fecha_prest);
+		}
+
 
 	}
 
