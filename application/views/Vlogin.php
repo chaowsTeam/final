@@ -64,7 +64,7 @@ caption {
     background: #000;
 }
 th,tr,td {
-   background: #000;
+   background: #FBFBFB;
 }
 </style>
 <script type="text/javascript">
@@ -84,7 +84,7 @@ th,tr,td {
             //console.log(variable[0]['bibliotecas'][0]['noLibros']); accede al numero de libros que tiene una biblioteca 
             //console.log(registros[1]['bibliotecas'].length);
             //console.log(registros[0]["bibliotecas"][0]["id_biblioteca"]);
-            console.log(registros[0]["bibliotecas"][1]["id_biblioteca"]);
+            console.log(registros[0]["bibliotecas"][0]);
            if (registros!=""){
 
             

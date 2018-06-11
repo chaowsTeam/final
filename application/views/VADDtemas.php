@@ -12,7 +12,7 @@
 <script>
 $(document).ready(function(){
   //var idIncremento = $("#tablaresponsive tr").length -1 ;
-  var idIncremento = '<?php echo($this->lastIdEdit);?>';
+  var idIncremento = '<?php echo($this->lastIdTemas);?>';
   idIncremento = parseInt(idIncremento);
   $("#nuevalinea").click(function(){
     idIncremento = idIncremento + 1;
@@ -43,22 +43,22 @@ $(document).ready(function(){
 </div>
 
 <div class="panel-body">
-<form action="fdoEditorial" method= "post">
+<form action="fdoTema" method= "post">
 <table align="center" style="margin-top: 150px; width: 400px;" class="table table-bordered" id="tablaresponsive">
   <thead> 
     <tr>
-      <th>Nombre Editorial</th>
-      <th></th>
+      <th>Nombre Autor</th>
+      
     </tr>
   </thead>
 
   <tbody>
     <?php
-        for ($i=0; $i < count($this->editorialesOrig); $i++) {
-          if($this->editorialesOrig[$i]['vigencia'] == 1){?>
+        for ($i=0; $i < count($this->temasOrig); $i++) {
+          if($this->temasOrig[$i]['vigencia'] == 1){?>
         <tr>
-         <td><input required type="text" value="<?php echo $this->editorialesOrig[$i]['nom_editorial'];?>" name="nom[]" class="form-control"></td>
-         <td><input readonly type="text" value="<?php echo $this->editorialesOrig[$i]['id_editorial'];?>" name="id[]" class="form-control"style="display:none"></td>
+         <td><input required type="text" value="<?php echo $this->temasOrig[$i]['nom_tema'];?>" name="nom[]" class="form-control" ></td>
+         <td><input readonly type="text" value="<?php echo $this->temasOrig[$i]['id_tema'];?>" name="id[]" class="form-control" style="display:none"></td>
          <td><button type="button" class="botonRojo">Eliminar</button></td>
         </tr>
       <?php }} ?>
@@ -69,7 +69,7 @@ $(document).ready(function(){
 <input type="submit" name="guardar" class="botonVerde" value="Guardar Cambios">
 </form>
 
-<form method= "post" action="pPrincipal">
+<form method= "post" action="fVCapturaLibros">
   <input type="submit" value="Regresar" class="botonNaranja" style="width: 200px; margin-left: 540px; margin-top: 25px;"></input>
 </form>
 </div>
