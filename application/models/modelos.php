@@ -72,11 +72,26 @@
 			}
 		}
 
-		public function obtenIdBiblio($nomBiblio){ //Funcion para obtener el id de una biblioteca
-			$query = "SELECT id_biblioteca FROM biblioteca WHERE nom_biblioteca = '".$nomBiblio."'";
+		public function obtenIdBiblio($nomBiblio, $indi){ //Funcion para obtener el id de una biblioteca
+			if ($indi == 1) {
+				$query = "SELECT id_biblioteca FROM biblioteca WHERE nom_biblioteca = '".$nomBiblio."'";
+				$resultado = $this->db->query($query);
+				$resultado = $resultado->row_array();
+				$resultado = $resultado['id_biblioteca'];
+				return($resultado);
+			} else { //Obtiene el id de TODAS las bibliotecas
+				$query = "SELECT id_biblioteca, nom_biblioteca FROM biblioteca";
+				$resultado = $this->db->query($query);
+				$resultado = $resultado->result_array();
+				return($resultado);
+			}
+		}
+
+		public function cuentaPrestamos($nomBiblio, $mes){ //Cuenta los prestamos de una biblioteca en un mes especifico
+			$query = "SELECT COUNT(id_prestamo) as cant_prestamos FROM prestamo, libro_biblioteca, biblioteca WHERE biblioteca."."id_biblioteca = libro_biblioteca."."id_biblioteca AND libro_biblioteca."."num_inv = prestamo."."num_inve AND biblioteca."."nom_biblioteca='".$nomBiblio."' AND MONTH(fecha_prest) ='".$mes."'";
 			$resultado = $this->db->query($query);
 			$resultado = $resultado->row_array();
-			$resultado = $resultado['id_biblioteca'];
+			$resultado = $resultado['cant_prestamos'];
 			return($resultado);
 		}
 

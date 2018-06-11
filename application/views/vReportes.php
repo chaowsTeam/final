@@ -33,16 +33,12 @@
     var dataType = 'application/vnd.ms-excel';
     var tableSelect = document.getElementById(tableID);
     var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
-    
     // Nombre del Archivo
     filename = 'ReporteExcel'
     filename = filename?filename+'.xls':'excel_data.xls';
-    
     // Crea la ligua de descarga
     downloadLink = document.createElement("a");
-    
     document.body.appendChild(downloadLink);
-    
     if(navigator.msSaveOrOpenBlob){
         var blob = new Blob(['\ufeff', tableHTML], {
             type: dataType
@@ -51,10 +47,8 @@
     }else{
         // Crea el path hacía el archivo
         downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
-    
         // Lo nombra
         downloadLink.download = filename;
-        
         //tEjecuta la funcion, descargando automaticamente el excel
         downloadLink.click();
     }
@@ -134,6 +128,73 @@
       }      
     });
   }
+
+
+  function repo6(){
+    var nomBiblio6 = document.getElementById('nomBiblio6').value;
+    var mes = document.getElementById('mes').value;
+    console.log('NomBiblio: ');
+    console.log(nomBiblio6);
+    console.log('Mes: ');
+    console.log(mes);
+    $.ajax({
+      url:"http://localhost/final/index.php/ControladorPrincipal/generaRepo6",
+      type:"POST",
+      data:{nomBiblio6:nomBiblio6, mes:mes},
+      success: function(respuesta){
+        var registros = JSON.parse(respuesta);
+        console.log('Los registros son: ');
+        console.log(registros);
+        if(registros!=''){
+
+          if (registros['indicador'] == 0) {
+            alert('Selecciona algún filtro');
+          }
+
+          if(registros['indicador'] == 1){
+            html = "<table><td><label style='width: 50px; margin-left: 420px;' >Biblioteca: </label><input readonly value='"+registros['biblioteca']+"' class='form-control' type='text' name='header' id='header' style='width: 260px; margin-left: 420px; margin-bottom: 30px;'></td><td></input></table>";
+
+            html += "<table id='tablita' style='width: 500px;' class='table table-responsive table-bordered' align="+"center"+"><thead>";
+
+            html +="<tr><th>Mes</th><th>Cant. Prestamos</th></th>";
+
+              for (var i=1; i<13; i++){
+                html+="<tr><td>"+registros[i]['mes']+"</td><td>"+registros[i]['cantPrestam']+"</td>";
+                html += "<input type='hidden' value='"+registros[i]['mes']+"'name='meses[]'></td>";
+                html += "<input type='hidden' value='"+registros[i]['cantPrestam']+"'name='cantP[]'></td>";
+              }
+
+            html+="<tr><th>Total</th><th align='center'>"+registros['TotalP']+"</th>";
+            html += "<input type='hidden' value='"+registros['TotalP']+"'name='total'></td>";
+          }
+
+          if (registros['indicador'] == 2) {
+              html = "<table><td><label style='width: 50px; margin-left: 415px;' >Mes: </label><input readonly value='"+registros['mes']+"' class='form-control' type='text' name='month' id='month' style='width: 260px; margin-left: 420px; margin-bottom: 30px;'></td><td></input><td></table>";
+
+              html += "<table id='tablita' style='width: 500px;' class='table table-responsive table-bordered' align="+"center"+"><thead>";
+
+              html +="<tr><th>Biblioteca</th><th>Prestamos</th>";
+
+              for (var i=0; i<registros['length']; i++){
+                html+="<tr><td>"+registros[i]['biblioteca']+"</td><td align='center'>"+registros[i]['cantPrestam']+"</td>";
+                html+= "<input type='hidden' value='"+registros[i]['biblioteca']+"'name='biblios[]'></td>";
+                html+= "<input type='hidden' value='"+registros[i]['cantPrestam']+"'name='cantP[]'></td>";
+              }
+
+              html+="<tr><th>Total</th><th align='center'>"+registros['TotalP']+"</th>";
+              html+= "<input type='hidden' value='"+registros['TotalP']+"'name='total'></td>";
+          }
+
+          if (registros['indicador'] == 3) {
+            html = "<table id='tablita'><td><label style='margin-left: 315px;' >Hay: </label></td><td><input readonly value='"+registros["noPrestamos"]+"' class='form-control' type='text' name='noPrestamos' id='noPrestamos' style='width: 40px; margin-left: 30px; margin-bottom: 30px;'></td></input><td><label style='margin-left: 15px; width:200px;' >Prestamos en el mes de: </label></td><td><input readonly value='"+registros["mes"]+"' class='form-control' type='text' name='mes' id='mes' style='width: 250px; margin-bottom: 15px; margin-left: 10px;'></td><td><td><label style='margin-left: 15px;' >En la biblioteca: </label></td><td><input readonly value='"+registros["biblioteca"]+"' class='form-control' type='text' name='biblioteca' id='biblioteca' style='width: 150px; margin-left: 20px; margin-bottom: 30px;'></td></table>";
+          }
+        }
+        html += "<input type='hidden' name='opcionhidden' id='opcionhidden' value="+registros['indicador']+">";
+        //Mostrar la información en pantalla.
+        $("#muestraDatos6").html(html);
+      }      
+    });
+  }
 </script>
 </head>
 
@@ -206,6 +267,108 @@
         </td>
       </table>
   </div>
+
+  <div id="div_2" class="contenido" class="container">
+    <form method="post" action="fPDFRepo2" target="_blank" >
+      <table style="margin-top: 30px; margin-left: 210px;" >
+        <td>
+          <select class="form-control" name="tituloLibro" id="tituloLibro" style="width: 200px;  margin-bottom: 50px; margin-right: 20px; margin-left: 24px;">
+          <option value="vacio">Elige Titulo ... </option>
+          <?php
+          for ($i=0; $i < count($this->titulos); $i++) {?>
+            <option><?php echo $this->titulos[$i]['titulo'] ?></option>
+          <?php } ?>
+          </select>
+        </td>
+
+        <td>
+          <select class="form-control" name="nomBiblio" id="nomBiblio" style="width: 200px; margin-bottom: 50px;">
+            <option value="vacio">Elige Biblioteca ... </option>
+            <?php
+            for ($i=0; $i < count($this->biblios); $i++) {?>
+              <option><?php echo $this->biblios[$i]['nom_biblioteca'] ?></option>
+            <?php } ?>
+          </select>
+        </td>
+        <td>
+          <label style='margin-left: 25px; margin-bottom: 50px;' >De: </label>
+        </td>
+        <td>
+          <input type="date" class="form-control" style="margin-left: 15px; margin-bottom: 50px;"></input>
+        </td>
+        <td>
+          <label style='margin-left: 25px; margin-bottom: 50px;' >A: </label>
+        </td>
+        <td>
+          <input type="date" class="form-control" style="margin-left: 25px; margin-bottom: 50px;"></input>
+        </td>
+      </table>
+
+      <div id="muestraDatos2" name="muestraDatos2">
+        <!-- Este es el div en que se desplegara la consulta-->
+      </div>
+
+      <table style="margin-top: 30px; margin-left: 415px;" >
+        <td>
+          <input type="submit" value="GenerarPDF" class="botonRojo" style="width: 150px; margin-top: 10px;"></input> 
+    </form>
+        </td>
+        <td>
+          <input value="Consultar" class="botonVerde" type="button" style="width: 250px; margin-left: 10px; margin-top: 10px;"  onclick="repo2()"></input> 
+        </td>
+        <td>
+            <button class="botonVerde" style="margin-left: 10px; margin-top: 10px; width: 150px;" onclick="exportTableToExcel('tablita')">Generar Excel</button>
+        </td>
+      </table>
+  </div>
+
+  <div id="div_6" class="contenido" class="container">
+    <form method="post" action="fPDFRepo6" target="_blank">
+    <table style="margin-top: 30px; margin-left: 450px;" >
+        <td>
+          <select class="form-control" name="nomBiblio6" id="nomBiblio6" style="width: 200px; margin-bottom: 50px;">
+            <option value="vacio">Elige Biblioteca ... </option>
+            <?php
+            for ($i=0; $i < count($this->biblios); $i++) {?>
+              <option><?php echo $this->biblios[$i]['nom_biblioteca'] ?></option>
+            <?php } ?>
+          </select>
+        </td>
+        <td>
+          <select class="form-control" name="mes" id="mes" style="width: 200px;  margin-bottom: 50px; margin-right: 20px; margin-left: 54px;">
+            <option value="vacio">Elige TMes ... </option>
+            <option value="1">Enero</option>
+            <option value="2">Febrero</option>
+            <option value="3">Marzo</option>
+            <option value="4">Abril</option>
+            <option value="5">Mayo</option>
+            <option value="6">Junio</option>
+            <option value="7">Julio</option>
+            <option value="8">Agosto</option>
+            <option value="9">Septiembre</option>
+            <option value="10">Octubre</option>
+            <option value="11">Noviembre</option>
+            <option value="12">Diciembre</option>
+          </select>
+        </td>
+      </table>
+      <div id="muestraDatos6" name="muestraDatos6">
+        <!-- Este es el div en que se desplegara la consulta-->
+      </div>
+      <table>
+        <td>
+            <input type="submit" value="GenerarPDF" class="botonRojo" style="width: 150px; margin-top: 10px; margin-left: 400px;"></input> 
+          </form>
+        </td>
+        <td>
+          <button class="botonVerde" type="button" style="width: 250px; margin-left: 10px; margin-top: 10px;"  onclick="repo6()">Consultar</button>
+        </td>
+        <td>
+          <button class="botonVerde" style="margin-left: 10px; margin-top: 10px; width: 150px;" onclick="exportTableToExcel('tablita')">Generar Excel</button>
+        </td>
+      </table>
+  </div>
+
 <form method="post" action="pPrincipal">
       <input type="submit" value="Regresar" class="botonNaranja" style="width: 200px; margin-left: 585px; margin-top: 50px;"></input> 
 </form>
