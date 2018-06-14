@@ -377,6 +377,58 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 		}
 	}
 
+	public function generaRepo5(){ //Funcion para obtener datos del REPORTE1
+		$tituloLibro = $this->input->post('tituloLibro5');
+		$usr = $this->input->post('usr');
+		
+		if(($tituloLibro == 'vacio') and ($usr == 'vacio')){ //NO HAY NINGUN FILTRO
+			$infoRepo['indicador'] = 0;
+			echo json_encode($infoRepo);
+		}elseif (($tituloLibro != 'vacio') and ($usr == 'vacio')) { //NO hay FILTRO USUARIO
+			//HACERLO para TODOS los usuarios. PRESTAMOS DE TODOS LOS USUARIOS de ese libro
+			$idLibro = $this->modelos->obtenIdLibro2($tituloLibro, 1);
+			$infoRepo['tituloLibro'] = $tituloLibro;
+			//Obtener todos los usuarios
+			$usuarios = $this->modelos->obtenUsuarios(0);
+			//Obtener la informacion de los prestamos de estos usuarios de ESE LIBRO
+			for ($i=0; $i < count($usuarios) ; $i++) {
+				$infoRepo[$i]['nomUsr'] = $usuarios[$i]['nom_usuario'];
+				$infoRepo[$i]['infoPrestamo'] = $this->modelos->obtenInfoPrestamosLibroUsr($usuarios[$i]['id_usuario'], $idLibro, 1);
+				for ($j=0; $j < count($infoRepo[$i]['infoPrestamo']); $j++) { 
+					$infoRepo[$i]['infoPrestamo'][$j]['biblioteca'] = $this->modelos->obtenBiblioPrestamo($infoRepo[$i]['infoPrestamo'][$j]['id_prestamo']);
+				}
+				$infoRepo[$i]['totalPrestam'] = count($infoRepo[$i]['infoPrestamo']);
+			}
+			$infoRepo['indicador'] = 1;
+			$infoRepo['length'] = count($infoRepo) -2;
+			echo json_encode($infoRepo);
+		}elseif(($tituloLibro == 'vacio') and ($usr != 'vacio')){ //NO HAY FILTRO DE TITULO PERO SI DE USUARIO, buscar todos los prestamos de ese usuario, de TODOS LOS LIBROS
+			//Obtener la informacion de los prestamos de estos usuarios de ESE LIBRO
+			$infoRepo['nomUsr'] = $usr;
+			$idUsr = $this->modelos->obtenIdUser($usr);
+			$infoRepo['infoPrestamo'] = $this->modelos->obtenInfoPrestamosLibroUsr($idUsr, NULL, 0);
+			for ($j=0; $j < count($infoRepo['infoPrestamo']); $j++) { 
+				$infoRepo['infoPrestamo'][$j]['biblioteca'] = $this->modelos->obtenBiblioPrestamo($infoRepo['infoPrestamo'][$j]['id_prestamo']);
+				$infoRepo['infoPrestamo'][$j]['tituloLibro'] = $this->modelos->obtenTituloPrestamos($infoRepo['infoPrestamo'][$j]['id_prestamo']);
+			}
+			$infoRepo['totalPrestam'] = count($infoRepo['infoPrestamo']);
+	
+			$infoRepo['indicador'] = 2;
+			$infoRepo['length'] = count($infoRepo) -2;
+			echo json_encode($infoRepo);	
+		}elseif (($tituloLibro != 'vacio') and ($nomBiblio != 'vacio')) { //Hay AMBOS filtros
+			$infoRepo['biblioteca'] = $nomBiblio;
+			$infoRepo['nomLibro'] = $tituloLibro;
+			//Obtener el autor de ese libro
+			$id_libro = $this->modelos->obtenIdLibro2($tituloLibro, 1);
+			$infoRepo['autores'] =$this->modelos->obtenAutores($id_libro, 1);
+			//Obtener la cantidad de un libro especifico en una biblioteca especifica 
+			$infoRepo['cantidad'] = $this->modelos->cuentaLibrosEnBiblio2($id_libro,$idBiblio);
+			$infoRepo['indicador'] = 3;
+			echo json_encode($infoRepo);
+		}
+	}
+
 	public function generaRepo6(){
 		$nomBiblio = $this->input->post('nomBiblio6');
 		$mes = $this->input->post('mes');
@@ -581,52 +633,52 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 	}
 
 	public function checaN(){
-		$tituloLibro = $this->input->post('tituloLibro2');
-		$nomBiblio = $this->input->post('nomBiblio2');
-		$D_ini = $this->input->post('D_ini');
-		$D_fin = $this->input->post('D_fin');
-
-		if((($tituloLibro == 'vacio') and ($nomBiblio == 'vacio')) or $D_ini == ' ' or $D_fin == '' ){ //NO HAY FILTRO
+		$tituloLibro = $this->input->post('tituloLibro5');
+		$usr = $this->input->post('usr');
+		
+		if(($tituloLibro == 'vacio') and ($usr == 'vacio')){ //NO HAY NINGUN FILTRO
 			$infoRepo['indicador'] = 0;
 			echo json_encode($infoRepo);
-		}elseif (($tituloLibro != 'vacio') and ($nomBiblio == 'vacio')) { //NO hay FILTRO BIBLIOTECA
-			//O SEA, PRESTAMOS DE ESE TITULO EN TODAS LAS BIBLIOTECAS, TOTAL PRESTAMOS AL FINAL 
-			$idL = $this->modelos->obtenIdLibro2($tituloLibro, 1);
-			$infoAllBiblios = $this->modelos->obtenIdBiblio('Null', 0); //la informacion de TODAS las biblios
-			$infoRepo['TotalP'] = 0;
-			for ($i=0; $i < count($infoAllBiblios) ; $i++) {
-				$infoRepo[$i]['biblioteca'] = $infoAllBiblios[$i]['nom_biblioteca'];
-				$infoRepo[$i]['cantPrestam'] = $this->modelos->cuentaPrestamosWithDate($infoRepo[$i]['biblioteca'], $idL, $D_ini, $D_fin);
-				$infoRepo['TotalP'] =  $infoRepo['TotalP'] + intval($infoRepo[$i]['cantPrestam']);
+		}elseif (($tituloLibro != 'vacio') and ($usr == 'vacio')) { //NO hay FILTRO USUARIO
+			//HACERLO para TODOS los usuarios. PRESTAMOS DE TODOS LOS USUARIOS de ese libro
+			$idLibro = $this->modelos->obtenIdLibro2($tituloLibro, 1);
+			$infoRepo['tituloLibro'] = $tituloLibro;
+			//Obtener todos los usuarios
+			$usuarios = $this->modelos->obtenUsuarios(0);
+			//Obtener la informacion de los prestamos de estos usuarios de ESE LIBRO
+			for ($i=0; $i < count($usuarios) ; $i++) {
+				$infoRepo[$i]['nomUsr'] = $usuarios[$i]['nom_usuario'];
+				$infoRepo[$i]['infoPrestamo'] = $this->modelos->obtenInfoPrestamosLibroUsr($usuarios[$i]['id_usuario'], $idLibro, 1);
+				for ($j=0; $j < count($infoRepo[$i]['infoPrestamo']); $j++) { 
+					$infoRepo[$i]['infoPrestamo'][$j]['biblioteca'] = $this->modelos->obtenBiblioPrestamo($infoRepo[$i]['infoPrestamo'][$j]['id_prestamo']);
+				}
+				$infoRepo[$i]['totalPrestam'] = count($infoRepo[$i]['infoPrestamo']);
 			}
-
-			//Obtener los autores del libro seleccionado
-			$infoRepo['titulo'] = $tituloLibro;
-			$infoRepo['D_ini'] = $D_ini;
-			$infoRepo['D_fin'] = $D_fin;
-			$infoRepo['cantB'] = count($infoAllBiblios);
 			$infoRepo['indicador'] = 1;
+			$infoRepo['length'] = count($infoRepo) -2;
 			echo json_encode($infoRepo);
-		}elseif(($tituloLibro == 'vacio') and ($nomBiblio != 'vacio')){ //NO HAY FILTRO DE TITULO PERO SI DE BIBLIOTECA Mostrar todos los libros (?) !!!!!!!!!!! y sus prestamos
-			$infoRepo['indicador'] = 2;
-			$infoRepo['totalGlobal'] = 0;
-			$infoRepo['biblioteca'] = $nomBiblio;
-			$idBiblio = $this->modelos->obtenIdBiblio($nomBiblio, 1);
-			//Obtener TODOS los libros de esa biblioteca
-			$infoRepo['libros'] = $this->modelos->obtenLibros($idBiblio,1);
-			//Obtener los PRESTAMOS  de cada titulo en ESA BIBLIOTECA
-			for ($i=0; $i < count($infoRepo['libros']) ; $i++) { 
-				$idLibro = $this->modelos->obtenIdLibro2($infoRepo['libros'][$i]['titulo'], 1);
-				$infoRepo['libros'][$i]['cantPrestam'] = $this->modelos->cuentaPrestamosWithDate($nomBiblio, $idLibro, $D_ini, $D_fin);
-				$infoRepo['totalGlobal'] = $infoRepo['totalGlobal'] + intval($infoRepo['libros'][$i]['cantPrestam']);
+		}elseif(($tituloLibro == 'vacio') and ($usr != 'vacio')){ //NO HAY FILTRO DE TITULO PERO SI DE USUARIO, buscar todos los prestamos de ese usuario, de TODOS LOS LIBROS
+			//Obtener la informacion de los prestamos de estos usuarios de ESE LIBRO
+			$infoRepo['nomUsr'] = $usr;
+			$idUsr = $this->modelos->obtenIdUser($usr);
+			$infoRepo['infoPrestamo'] = $this->modelos->obtenInfoPrestamosLibroUsr($idUsr, NULL, 0);
+			for ($j=0; $j < count($infoRepo['infoPrestamo']); $j++) { 
+				$infoRepo['infoPrestamo'][$j]['biblioteca'] = $this->modelos->obtenBiblioPrestamo($infoRepo['infoPrestamo'][$j]['id_prestamo']);
+				$infoRepo['infoPrestamo'][$j]['tituloLibro'] = $this->modelos->obtenTituloPrestamos($infoRepo['infoPrestamo'][$j]['id_prestamo']);
 			}
-			echo json_encode($infoRepo);			
+			$infoRepo['totalPrestam'] = count($infoRepo['infoPrestamo']);
+	
+			$infoRepo['indicador'] = 1;
+			$infoRepo['length'] = count($infoRepo) -2;
+			echo json_encode($infoRepo);	
 		}elseif (($tituloLibro != 'vacio') and ($nomBiblio != 'vacio')) { //Hay AMBOS filtros
-			//OBTENER LOS PRESTAMOS DE ESE LIBRO EN ESA BIBLIOTECA EN ESE LAPSO DE TIEMPO
 			$infoRepo['biblioteca'] = $nomBiblio;
 			$infoRepo['nomLibro'] = $tituloLibro;
-			$idLibro = $this->modelos->obtenIdLibro2($tituloLibro, 1);
-			$infoRepo['cantPrestam'] = $this->modelos->cuentaPrestamosWithDate($nomBiblio, $idLibro, $D_ini, $D_fin);
+			//Obtener el autor de ese libro
+			$id_libro = $this->modelos->obtenIdLibro2($tituloLibro, 1);
+			$infoRepo['autores'] =$this->modelos->obtenAutores($id_libro, 1);
+			//Obtener la cantidad de un libro especifico en una biblioteca especifica 
+			$infoRepo['cantidad'] = $this->modelos->cuentaLibrosEnBiblio2($id_libro,$idBiblio);
 			$infoRepo['indicador'] = 3;
 			echo json_encode($infoRepo);
 		}
@@ -835,9 +887,10 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 
 
 	public function fcargaVRepo(){ //Funcion para cargar la vista de los reportes
-		$this->titulos = $this->modelos->obtenTitulos();
+		$this->titulos = $this->modelos->obtenTitulos(NULL,0);
 		$this->biblios = $this->modelos->obtenBiblios(0);
-		$this->load->view('vReportes', $this->titulos, $this->biblios);
+		$this->usrs = $this->modelos->obtenUsuarios(0);
+		$this->load->view('vReportes', $this->titulos, $this->biblios, $this->usrs);
 	}
 
 
