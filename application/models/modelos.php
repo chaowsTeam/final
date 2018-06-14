@@ -72,6 +72,13 @@
 			}
 		}
 
+		public function obtenLibros2(){
+			$query = "SELECT * from libro LIMIT 0,50";
+			$resultado = $this->db->query($query);
+			return $resultado->result_array();
+
+		}
+
 		public function obtenIdBiblio($nomBiblio){ //Funcion para obtener el id de una biblioteca
 			$query = "SELECT id_biblioteca FROM biblioteca WHERE nom_biblioteca = '".$nomBiblio."'";
 			$resultado = $this->db->query($query);
@@ -217,7 +224,8 @@
 		public function agregaLibroBiblioteca($idlibro,$idbiblio,$prestamo){
 			$query = "INSERT INTO libro_biblioteca (num_inv, id_libro, id_biblioteca, prestado) VALUES (NULL, '".$idlibro."', '".$idbiblio."', '".$prestamo."')";
 			
-			$this->db->query($query);
+			$respuesta  = $this->db->query($query);
+			return $respuesta;
 		}
 		public function agregarPrestamos($id_empleado,$id_usuario,$num_inve,$fecha_prest){
 			$query = "INSERT INTO prestamo (id_empleado, id_prestamo, id_usuario, num_inve, fecha_prest, fecha_dev) VALUES ('".$id_empleado."', NULL, '".$id_usuario."', '".$num_inve."', '".$fecha_prest."', '".$fecha_prest."')";
@@ -266,6 +274,11 @@
 				$query = "INSERT editorial"
 			}
 			*/
+		}
+		public function borraPrestamo($num_inve, $id_prestamo){
+			$query = "DELETE FROM prestamo WHERE id_prestamo = '".$id_prestamo."' and num_inve = '".$num_inve."'";
+			$respuesta = $this->db->query($query);
+			return $respuesta->row_array();
 		}
 		public function updateTemas($originales, $actualizados){ //Funcion para hacer update a los obtenEditoriales
 			for ($i=0; $i < count($originales); $i++) { 

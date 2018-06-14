@@ -10,18 +10,16 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine">
 
 <script type="text/javascript">
-    var registros;
+    
     function agregaLibro(){
-        var titulo = document.getElementById('titulo').value;
-        var ISBN = document.getElementById('ISBN').value;
-        var tema = document.getElementById('tema').value;
-        var editorial = document.getElementById('editorial').value;
-        //console.log(editorial);
-        //console.log(libro);
+        
+        var bibliotecas = document.getElementById('bibliotecas').value;
+        var libros = document.getElementById('libros').value;
+        console.log(bibliotecas, libros);
        $.ajax({
-        url:"http://localhost/final/index.php/ControladorPrincipal/agregaNombreLibros",
+        url:"http://localhost/final/index.php/ControladorPrincipal/guardaLibroBiblioteca",
         type:"POST",
-        data:{nombreLibro:titulo, isbn:ISBN, tema:tema, edit:editorial},
+        data:{bibliotecas:bibliotecas,libros: libros},
         success: function(respuesta){
             alert(respuesta);
 
@@ -47,28 +45,24 @@
 <table align="center" style="margin-top: 150px; width: 400px;" class="table table-bordered" id="tablaresponsive">
   <thead> 
     <tr>
-      <th>Titulo</th>
-      <th>ISBN</th>
-      <th>Clasficación</th>
-      <th>Editorial</th>
+     
+      <th>Biblioteca</th>
+       <th>Libro</th>
     </tr>
   </thead>
 
   <tbody>
         <tr>
-         <td><input required type="text" id="titulo" name="titulo" class="form-control" style="width: 200px" ></td>
-
-         <td><input required type="text" id="ISBN" name="ISBN" class="form-control" style="width: 80px" ></td>
-         <td><select id="tema" class="selectpicker" data-style="btn-primary">
-              <?php for ($i=0; $i < count($this->temas); $i++) {?> 
-              <option value="<?php echo $this->temas[$i]['id_tema'];?>"><?php echo $this->temas[$i]['nom_tema'];?></option>
+         <td><select id="bibliotecas" class="selectpicker" data-style="btn-primary">
+              <?php for ($i=0; $i < count($this->bibliotecas); $i++) {?> 
+              <option value="<?php echo $this->bibliotecas[$i]['id_biblioteca'];?>"><?php echo $this->bibliotecas[$i]['nom_biblioteca'];?></option>
               <?php }?>           
              </select>
           </td>
          <td>
-            <select id="editorial" class="selectpicker" data-style="btn-primary">
-              <?php for ($i=0; $i < count($this->editoriales); $i++) {?> 
-              <option value="<?php echo $this->editoriales[$i]['id_editorial'];?>" ><?php echo $this->editoriales[$i]['nom_editorial'];?></option>
+            <select id="libros" class="selectpicker" data-style="btn-primary">
+              <?php for ($i=0; $i < count($this->libros); $i++) {?> 
+              <option value="<?php echo $this->libros[$i]['id_libro'];?>" ><?php echo $this->libros[$i]['titulo'];?></option>
               <?php } ?>           
             </select>
          </td>

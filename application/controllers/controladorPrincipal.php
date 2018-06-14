@@ -87,8 +87,12 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 		$tema = $this->input->post('tema');
 		$edit = $this->input->post('edit');
 		$respuesta = $this->modelos->agregaLibro($titulo, $isbn,$tema, $edit);
-
-		echo json_encode($respuesta);
+		if (isset($respuesta)){
+			echo "Agregado exitosamente";
+		}else{
+			echo "Problemas al agregar, intente de nuevo";
+		}
+		
 	}
 
 	public function generaRepo1(){ //Funcion para obtener datos del REPORTE1
@@ -420,6 +424,12 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 		$this->load->view('VADDLibros',$this->temas,$this->editoriales);
 	}
 
+	public function agregarLibrosBiblioteca(){
+		$this->bibliotecas = $this->modelos->obtenBiblios(0);
+		$this->libros = $this->modelos->obtenLibros2();
+		$this->load->view('VADDlibrosBiblioteca', $this->bibliotecas,$this->libros);
+	}
+
 	public function fdoEditorial(){ //Funcion para agregar n editoriales
 		$this->nomEditoriales = $this->input->post('nom');
 		$this->idEditoriales = $this->input->post('id');
@@ -471,6 +481,31 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 		$this->titulos = $this->modelos->obtenTitulos();
 		$this->biblios = $this->modelos->obtenBiblios(0);
 		$this->load->view('vReportes', $this->titulos, $this->biblios);
+	}
+
+	public function guardaLibroBiblioteca(){
+		$titulo = $this->input->post('bibliotecas');
+		$biblioteca = $this->input->post('libros');
+		$respuesta = $this->modelos->agregaLibroBiblioteca($titulo, $biblioteca, 0);
+		if (isset($respuesta)){
+			echo "Agregado";
+		}else{
+			echo "Error al agregar";
+		}
+
+	}
+	public function prestamo(){
+		$num_inve = $this->input->post('nombreLibro');
+		$id_prestamo = $this->input->post('prestamo');
+		$respuesta = $this->modelos->borraPrestamo($num_inve, $id_prestamo);
+		echo "Borrado";
+		//echo json_encode($num_inve);
+		/*if ($respuesta==''){
+			echo json_encode("Borrado");
+		}else{
+			echo json_encode("problemas al borrar, intentelo de nuevo");
+		}*/
+
 	}
 
 
