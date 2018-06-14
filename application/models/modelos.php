@@ -6,10 +6,18 @@
 			$this->load->database();
 		}
 
-		public function obtenTitulos(){ //Funcion para obtener TODOS los titulos
-			$query = "SELECT titulo FROM libro ";
-			$respuesta = $this->db->query($query);
-			return($respuesta->result_array());
+		public function obtenTitulos($id_libro, $indi){ //Funcion para obtener TODOS los titulos
+			if($indi == 0){ //Obtiene el titulo de todos los libros
+				$query = "SELECT titulo FROM libro ";
+				$respuesta = $this->db->query($query);
+				return($respuesta->result_array());
+			}else{ //Ontiene el titulo de un libro en especifico
+				$query = "SELECT titulo FROM libro WHERE id_libro = '".$id_libro."'";
+				$resultado = $this->db->query($query);
+				$resultado = $resultado->row_array();
+				$resultado = $resultado['titulo'];
+				return($resultado);
+			}
 		}
 
 
@@ -72,6 +80,7 @@
 			}
 		}
 
+<<<<<<< HEAD
 		public function obtenLibros2(){
 			$query = "SELECT * from libro LIMIT 0,50";
 			$resultado = $this->db->query($query);
@@ -81,9 +90,61 @@
 
 		public function obtenIdBiblio($nomBiblio){ //Funcion para obtener el id de una biblioteca
 			$query = "SELECT id_biblioteca FROM biblioteca WHERE nom_biblioteca = '".$nomBiblio."'";
+=======
+		public function obtenIdBiblio($nomBiblio, $indi){ //Funcion para obtener el id de una biblioteca
+			if ($indi == 1) {
+				$query = "SELECT id_biblioteca FROM biblioteca WHERE nom_biblioteca = '".$nomBiblio."'";
+				$resultado = $this->db->query($query);
+				$resultado = $resultado->row_array();
+				$resultado = $resultado['id_biblioteca'];
+				return($resultado);
+			} else { //Obtiene el id de TODAS las bibliotecas
+				$query = "SELECT id_biblioteca, nom_biblioteca FROM biblioteca";
+				$resultado = $this->db->query($query);
+				$resultado = $resultado->result_array();
+				return($resultado);
+			}
+		}
+
+		public function cuentaPrestamos($nomBiblio, $mes){ //Cuenta los prestamos de una biblioteca en un mes especifico
+			$query = "SELECT COUNT(id_prestamo) as cant_prestamos FROM prestamo, libro_biblioteca, biblioteca WHERE biblioteca."."id_biblioteca = libro_biblioteca."."id_biblioteca AND libro_biblioteca."."num_inv = prestamo."."num_inve AND biblioteca."."nom_biblioteca='".$nomBiblio."' AND MONTH(fecha_prest) ='".$mes."'";
 			$resultado = $this->db->query($query);
 			$resultado = $resultado->row_array();
-			$resultado = $resultado['id_biblioteca'];
+			$resultado = $resultado['cant_prestamos'];
+			return($resultado);
+		}
+
+		public function cuentaPrestamosUsuario($nomUsr){ //Funcion para contar los prestamos de UN SOLO USUARIOS
+			$query = "SELECT COUNT(id_prestamo) as cant_prestamos FROM prestamo WHERE id_usuario = '".$nomUsr."'";
+			$resultado = $this->db->query($query);
+			$resultado = $resultado->row_array();
+			$resultado = $resultado['cant_prestamos'];
+			return($resultado);
+		}
+
+		public function obtenBiblioPrestamo($idPrestamo){//Obtiene la biblioteca de donde se efectuo un prestamo (usando el id del prestamo)
+			$query = "SELECT nom_biblioteca FROM prestamo, libro_biblioteca, biblioteca WHERE prestamo."."num_inve = libro_biblioteca."."num_inv AND libro_biblioteca."."id_biblioteca = biblioteca."."id_biblioteca AND prestamo."."id_prestamo = ".$idPrestamo."";
+			$resultado = $this->db->query($query);
+			$resultado = $resultado->row_array();
+			$resultado = $resultado['nom_biblioteca'];
+			return $resultado;
+		}
+
+		public function obtenTituloPrestamos($idPrestamo){ //Obtiene los titulos del libro en un prestamo 
+			$query = "SELECT titulo FROM prestamo, libro_biblioteca, libro WHERE prestamo."."num_inve = libro_biblioteca."."num_inv AND libro_biblioteca."."id_libro = libro."."id_libro AND prestamo."."id_prestamo = ".$idPrestamo."";
+			$resultado = $this->db->query($query);
+			$resultado = $resultado->row_array();
+			$resultado = $resultado['titulo'];
+			return $resultado;
+		}
+
+		public function cuentaPrestamosWithDate($nomBiblio, $idL, $D_ini, $D_fin){ //Cuenta los prestamos en un intervalo de tiempo DE UN TITULO EN ESPECIFICO, EN UNA BIBLIOTECA ESPECIFICA
+			$query = "SELECT COUNT(id_prestamo) as cant_prestamos FROM prestamo, libro_biblioteca, biblioteca, libro WHERE libro."."id_libro = libro_biblioteca."."id_libro AND biblioteca."."id_biblioteca = libro_biblioteca."."id_biblioteca AND libro_biblioteca."."num_inv = prestamo."."num_inve AND biblioteca."."nom_biblioteca='".$nomBiblio."' AND libro."."id_libro =".$idL." AND (prestamo."."fecha_prest BETWEEN '".$D_ini."' AND '".$D_fin."')";
+
+>>>>>>> cd7cb422d50dbebea74dec2e8bdab7ff7ccb207c
+			$resultado = $this->db->query($query);
+			$resultado = $resultado->row_array();
+			$resultado = $resultado['cant_prestamos'];
 			return($resultado);
 		}
 
@@ -103,7 +164,7 @@
 		}
 
 		public function obtenUsuarios($indi){
-			if ($indi == 0) {
+			if ($indi == 0) { //Obtiene todos los usuarios (Todos los datos de estos)
 				$query = "SELECT * FROM usuario";
 				$resultado = $this->db->query($query);
 				return $resultado->result_array();
@@ -176,11 +237,11 @@
 		public function obtenIdLibro($nombre){
 			$query = "SELECT id_libro, titulo FROM libro WHERE titulo LIKE '%".$nombre."%' limit 1,30";
 			$resultado = $this->db->query($query);
-			return $resultado->result_array();
+			return $resultado->row_array();
 		}
 
 		public function obtenLibroBiblioteca($id_libro){
-			$query = "SELECT DISTINCT id_biblioteca FROM libro_biblioteca  WHERE id_libro = '".$id_libro."' AND prestado = 0";
+			$query = "SELECT DISTINCT id_biblioteca FROM libro_biblioteca  WHERE id_libro = ".$id_libro." AND prestado = 0";
 			$resultado = $this->db->query($query);
 			return $resultado->result_array();
 		}
@@ -305,6 +366,27 @@
 				$query = "INSERT editorial"
 			}
 			*/
+		}
+
+		public function obtenIdUser($usr){ //Obtiene el ID de un usuario
+			$query = "SELECT id_usuario FROM usuario WHERE nom_usuario = '".$usr."'";
+			$resultado = $this->db->query($query);
+			$resultado = $resultado->row_array();
+			$resultado = $resultado['id_usuario'];
+			return($resultado);
+		}
+
+		public function obtenInfoPrestamosLibroUsr($idUsr, $idLibro, $indi){ //Función para obtener TODA la información de prestamos.sadhsd
+			if ($indi == 0) { //Obtiene la informacion de TODOS LOS PRESTAMOS de UN SOLO USR
+				$query = "SELECT prestamo."."id_prestamo, prestamo."."fecha_prest, prestamo."."fecha_dev FROM prestamo, libro_biblioteca, libro, usuario WHERE usuario."."id_usuario = prestamo."."id_usuario AND usuario."."id_usuario = '".$idUsr."' AND prestamo."."num_inve = libro_biblioteca."."num_inv AND libro_biblioteca."."id_libro = libro."."id_libro";
+				$respuesta = $this->db->query($query);
+				return ($respuesta->result_array());
+			}else{ //Obtiene la informacion de TODOS los prestamos de  de UN SOLO USUARIO de un LIBRO especifico
+				$query = "SELECT prestamo."."id_prestamo, prestamo."."fecha_prest, prestamo."."fecha_dev FROM prestamo, libro_biblioteca, libro, usuario WHERE usuario."."id_usuario = prestamo."."id_usuario AND usuario."."id_usuario = '".$idUsr."' AND prestamo."."num_inve = libro_biblioteca."."num_inv AND libro_biblioteca."."id_libro = libro."."id_libro AND libro."."id_libro = ".$idLibro."";
+				$respuesta = $this->db->query($query);
+				return ($respuesta->result_array());
+			}
+
 		}
 }
 
