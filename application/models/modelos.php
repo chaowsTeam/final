@@ -95,6 +95,15 @@
 			return($resultado);
 		}
 
+		public function cuentaPrestamosWithDate($nomBiblio, $idL, $D_ini, $D_fin){ //Cuenta los prestamos en un intervalo de tiempo DE UN TITULO EN ESPECIFICO, EN UNA BIBLIOTECA ESPECIFICA
+			$query = "SELECT COUNT(id_prestamo) as cant_prestamos FROM prestamo, libro_biblioteca, biblioteca, libro WHERE libro."."id_libro = libro_biblioteca."."id_libro AND biblioteca."."id_biblioteca = libro_biblioteca."."id_biblioteca AND libro_biblioteca."."num_inv = prestamo."."num_inve AND biblioteca."."nom_biblioteca='".$nomBiblio."' AND libro."."id_libro =".$idL." AND (prestamo."."fecha_prest BETWEEN '".$D_ini."' AND '".$D_fin."')";
+
+			$resultado = $this->db->query($query);
+			$resultado = $resultado->row_array();
+			$resultado = $resultado['cant_prestamos'];
+			return($resultado);
+		}
+
 		public function obtenTemas($indi){
 			if ($indi == 0) {
 				$query = "SELECT * FROM tema";
@@ -184,11 +193,11 @@
 		public function obtenIdLibro($nombre){
 			$query = "SELECT id_libro, titulo FROM libro WHERE titulo LIKE '%".$nombre."%' limit 1,30";
 			$resultado = $this->db->query($query);
-			return $resultado->result_array();
+			return $resultado->row_array();
 		}
 
 		public function obtenLibroBiblioteca($id_libro){
-			$query = "SELECT DISTINCT id_biblioteca FROM libro_biblioteca  WHERE id_libro = '".$id_libro."' AND prestado = 0";
+			$query = "SELECT DISTINCT id_biblioteca FROM libro_biblioteca  WHERE id_libro = ".$id_libro." AND prestado = 0";
 			$resultado = $this->db->query($query);
 			return $resultado->result_array();
 		}
