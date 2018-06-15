@@ -260,6 +260,136 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 		}
 	}
 
+	public function fPDFRepo5(){ //Funcion para generar el PDF del reporte 5
+		$opc = $this->input->post('opcionhidden');
+
+		if($opc=='1'){ //Solo hay filtro de  TITULO
+			//Obtener la informacion de la vista
+			$header = $this->input->post('titulo');
+			$usuarios = $this->input->post('usrs');
+			$biblios = $this->input->post('bibliotecas');
+			$f_pres = $this->input->post('f_pres');
+			$f_dev = $this->input->post('f_dev');
+			$totalP = $this->input->post('totalP');
+
+			//Ya se tiene la informacion, se genera el reporte!
+			$nombre = "Titulo del libro: ".$header;
+			$totalText = 'Total';
+
+			$pdf = new PDF('P', 'cm', 'a4');
+			$pdf->AddPage();
+			
+			$pdf->SetFont('Arial','B',16);
+			$pdf->Cell(19,1,$header,0,0,'C');
+			$pdf->Ln(1);
+			$pdf->Ln(1);
+			$pdf->SetFont('Times','B',14);
+			$pdf->SetDrawColor(0,80,180);
+			$pdf->SetFillColor(430,430,10);
+			$pdf->SetLineWidth(0.08);
+			$pdf->Cell(5, 1, "Usuario", 1, 0, 'C');
+			$pdf->Cell(5, 1, "Biblioteca", 1, 0, 'C');
+			$pdf->Cell(4, 1, "Fecha Prestamo", 1, 0, 'C');
+			$pdf->Cell(4, 1, "Fecha Devolución", 1, 1, 'C');
+			$pdf->Ln();
+			$pdf->SetFont('Times','',12);
+
+			for ($i=0; $i < count($usuarios); $i++) {
+				$pdf->Cell(5, 1, $usuarios[$i], 1, 0, 'C');
+				$pdf->Cell(5, 1, $biblios[$i], 1, 0, 'C');
+				$pdf->Cell(4, 1, $f_pres[$i], 1, 0, 'C');
+				$pdf->Cell(4, 1, $f_dev[$i], 1, 1, 'C');
+			}
+
+			$pdf->Output();
+			
+		}elseif($opc=='2') { //Solo hay filtro de USUARIO
+			$usr = $this->input->post('usuario');
+			$libros = $this->input->post('titulos');
+			$biblios = $this->input->post('biblios');
+			$f_pres = $this->input->post('f_pres');
+			$f_dev = $this->input->post('f_dev');
+			$total = $this->input->post('totalP');
+			
+			//Ya se tiene la informacion, se genera el reporte!
+			$nombre = "Resporte de prestamos del Usuario: ".$usr;
+			$totalText = 'Total';
+
+			$pdf = new PDF('P', 'cm', 'a4');
+			$pdf->AddPage();
+			
+			$pdf->SetFont('Arial','B',16);
+			$pdf->Cell(19,1,$nombre,0,0,'C');
+			$pdf->Ln(1);
+			$pdf->Ln(1);
+			$pdf->SetFont('Times','B',12);
+			$pdf->SetDrawColor(0,80,180);
+			$pdf->SetFillColor(430,430,10);
+			$pdf->SetLineWidth(0.08);
+			$pdf->Cell(6, 1, "Libro", 1, 0, 'C');
+			$pdf->Cell(4, 1, "Biblioteca", 1, 0, 'C');
+			$pdf->Cell(4, 1, "Fecha Prestamo", 1, 0, 'C');
+			$pdf->Cell(4, 1, "Fecha Devolución", 1, 1, 'C');
+			$pdf->Ln();
+			$pdf->SetFont('Times','',12);
+
+			for ($i=0; $i < count($libros); $i++) {
+				$pdf->Cell(6, 1, $libros[$i], 1, 0, 'C');
+				$pdf->Cell(4, 1, $biblios[$i], 1, 0, 'C');
+				$pdf->Cell(4, 1, $f_pres[$i], 1, 0, 'C');
+				$pdf->Cell(4, 1, $f_dev[$i], 1, 1, 'C');
+			}
+			$pdf->SetFont('Times','B',12);
+			$pdf->Ln();
+			$pdf->Cell(6, 1, 'Total', 1, 0, 'C');
+			$pdf->Cell(4, 1, '', 1, 0, 'C');
+			$pdf->Cell(4, 1, '', 1, 0, 'C');
+			$pdf->Cell(4, 1, $total[0], 1, 1, 'C');
+
+			$pdf->Output();
+		}elseif ($opc=='3') { //Hay ambos filtros
+			$nomL = $this->input->post('nomL');
+			$usr = $this->input->post('usr');
+			$biblios = $this->input->post('biblios');
+			$f_pres = $this->input->post('f_pres');
+			$f_dev = $this->input->post('f_dev');
+			$total = $this->input->post('totalP');
+
+			//Ya se tiene la informacion, se genera el reporte!
+
+			$nombre = "Prestamos del Libro: ".$nomL."      Al usuario: ".$usr;
+
+			$pdf = new PDF('P', 'cm', 'a4');
+			$pdf->AddPage();
+			$pdf->SetFont('Times','B',16);
+			$pdf->Cell(19,1,$nombre,0,1,'C');
+			$pdf->SetFont('Times','B',12);
+			$pdf->SetDrawColor(0,80,180);
+			$pdf->SetFillColor(430,430,10);
+			$pdf->SetLineWidth(0.08);
+			$pdf->Ln();
+
+			$pdf->Cell(4, 1, "Biblioteca", 1, 0, 'C');
+			$pdf->Cell(4, 1, "Fecha Prestamo", 1, 0, 'C');
+			$pdf->Cell(4, 1, "Fecha Devolución", 1, 1, 'C');
+			$pdf->Ln();
+			$pdf->SetFont('Times','',12);
+
+			for ($i=0; $i < count($biblios); $i++) { 
+				$pdf->Cell(4, 1, $biblios[$i], 1, 0, 'C');
+				$pdf->Cell(4, 1, $f_pres[$i], 1, 0, 'C');
+				$pdf->Cell(4, 1, $f_dev[$i], 1, 1, 'C');
+			}
+			$pdf->SetFont('Times','B',12);
+			$pdf->Ln();
+			$pdf->Cell(4, 1, 'Total', 1, 0, 'C');
+			$pdf->Cell(4, 1, '', 1, 0, 'C');
+			$pdf->Cell(4, 1, $total, 1, 1, 'C');
+
+			$pdf->Output();
+		}
+	}
+
 	public function fPDFRepo6(){
 
 		$opc = $this->input->post('opcionhidden');
@@ -381,6 +511,62 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 		}
 	}
 
+	public function generaRepo4(){ //Funcion para obtener datos del REPORTE1
+		$tituloLibro = $this->input->post('tituloLibro5');
+		$usr = $this->input->post('usr');
+		
+		if(($tituloLibro == 'vacio') and ($usr == 'vacio')){ //NO HAY NINGUN FILTRO
+			$infoRepo['indicador'] = 0;
+			echo json_encode($infoRepo);
+		}elseif (($tituloLibro != 'vacio') and ($usr == 'vacio')) { //NO hay FILTRO USUARIO
+			//HACERLO para TODOS los usuarios. PRESTAMOS DE TODOS LOS USUARIOS de ese libro
+			$idLibro = $this->modelos->obtenIdLibro2($tituloLibro, 1);
+			$infoRepo['tituloLibro'] = $tituloLibro;
+			//Obtener todos los usuarios
+			$usuarios = $this->modelos->obtenUsuarios(0);
+			//Obtener la informacion de los prestamos de estos usuarios de ESE LIBRO
+			for ($i=0; $i < count($usuarios) ; $i++) {
+				$infoRepo[$i]['nomUsr'] = $usuarios[$i]['nom_usuario'];
+				$infoRepo[$i]['infoPrestamo'] = $this->modelos->obtenInfoPrestamosLibroUsr($usuarios[$i]['id_usuario'], $idLibro, 1);
+				for ($j=0; $j < count($infoRepo[$i]['infoPrestamo']); $j++) { 
+					$infoRepo[$i]['infoPrestamo'][$j]['biblioteca'] = $this->modelos->obtenBiblioPrestamo($infoRepo[$i]['infoPrestamo'][$j]['id_prestamo']);
+				}
+				$infoRepo[$i]['totalPrestam'] = count($infoRepo[$i]['infoPrestamo']);
+			}
+			$infoRepo['indicador'] = 1;
+			$infoRepo['length'] = count($infoRepo) -2;
+			echo json_encode($infoRepo);
+		}elseif(($tituloLibro == 'vacio') and ($usr != 'vacio')){ //NO HAY FILTRO DE TITULO PERO SI DE USUARIO, buscar todos los prestamos de ese usuario, de TODOS LOS LIBROS
+			//Obtener la informacion de los prestamos de estos usuarios de ESE LIBRO
+			$infoRepo['nomUsr'] = $usr;
+			$idUsr = $this->modelos->obtenIdUser($usr);
+			$infoRepo['infoPrestamo'] = $this->modelos->obtenInfoPrestamosLibroUsr($idUsr, NULL, 0);
+			for ($j=0; $j < count($infoRepo['infoPrestamo']); $j++) { 
+				$infoRepo['infoPrestamo'][$j]['biblioteca'] = $this->modelos->obtenBiblioPrestamo($infoRepo['infoPrestamo'][$j]['id_prestamo']);
+				$infoRepo['infoPrestamo'][$j]['tituloLibro'] = $this->modelos->obtenTituloPrestamos($infoRepo['infoPrestamo'][$j]['id_prestamo']);
+			}
+			$infoRepo['totalPrestam'] = count($infoRepo['infoPrestamo']);
+	
+			$infoRepo['indicador'] = 2;
+			$infoRepo['length'] = count($infoRepo) -2;
+			echo json_encode($infoRepo);	
+		}elseif (($tituloLibro != 'vacio') and ($usr != 'vacio')) { //Hay AMBOS filtros
+			$infoRepo['usr'] = $usr;
+			$idUsr = $this->modelos->obtenIdUser($usr);
+			$infoRepo['nomLibro'] = $tituloLibro;
+			//Obtener el autor de ese libro
+			$id_libro = $this->modelos->obtenIdLibro2($tituloLibro, 1);
+			//Obtener los prestamos de ese usuario, de ese libro
+			$infoRepo['infoPrestamo'] = $this->modelos->obtenInfoPrestamosLibroUsr($idUsr, $id_libro, 1);
+			for ($i=0; $i < count($infoRepo['infoPrestamo']); $i++) { 
+				$infoRepo['infoPrestamo'][$i]['biblioteca'] = $this->modelos->obtenBiblioPrestamo($infoRepo['infoPrestamo'][$i]['id_prestamo']);
+			}
+			$infoRepo['totalP'] = count($infoRepo['infoPrestamo']);
+			$infoRepo['indicador'] = 3;
+			echo json_encode($infoRepo);	
+		}
+	}
+
 	public function generaRepo5(){ //Funcion para obtener datos del REPORTE1
 		$tituloLibro = $this->input->post('tituloLibro5');
 		$usr = $this->input->post('usr');
@@ -420,16 +606,20 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 			$infoRepo['indicador'] = 2;
 			$infoRepo['length'] = count($infoRepo) -2;
 			echo json_encode($infoRepo);	
-		}elseif (($tituloLibro != 'vacio') and ($nomBiblio != 'vacio')) { //Hay AMBOS filtros
-			$infoRepo['biblioteca'] = $nomBiblio;
+		}elseif (($tituloLibro != 'vacio') and ($usr != 'vacio')) { //Hay AMBOS filtros
+			$infoRepo['usr'] = $usr;
+			$idUsr = $this->modelos->obtenIdUser($usr);
 			$infoRepo['nomLibro'] = $tituloLibro;
 			//Obtener el autor de ese libro
 			$id_libro = $this->modelos->obtenIdLibro2($tituloLibro, 1);
-			$infoRepo['autores'] =$this->modelos->obtenAutores($id_libro, 1);
-			//Obtener la cantidad de un libro especifico en una biblioteca especifica 
-			$infoRepo['cantidad'] = $this->modelos->cuentaLibrosEnBiblio2($id_libro,$idBiblio);
+			//Obtener los prestamos de ese usuario, de ese libro
+			$infoRepo['infoPrestamo'] = $this->modelos->obtenInfoPrestamosLibroUsr($idUsr, $id_libro, 1);
+			for ($i=0; $i < count($infoRepo['infoPrestamo']); $i++) { 
+				$infoRepo['infoPrestamo'][$i]['biblioteca'] = $this->modelos->obtenBiblioPrestamo($infoRepo['infoPrestamo'][$i]['id_prestamo']);
+			}
+			$infoRepo['totalP'] = count($infoRepo['infoPrestamo']);
 			$infoRepo['indicador'] = 3;
-			echo json_encode($infoRepo);
+			echo json_encode($infoRepo);	
 		}
 	}
 
@@ -672,19 +862,24 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 			}
 			$infoRepo['totalPrestam'] = count($infoRepo['infoPrestamo']);
 	
-			$infoRepo['indicador'] = 1;
+			$infoRepo['indicador'] = 2;
 			$infoRepo['length'] = count($infoRepo) -2;
 			echo json_encode($infoRepo);	
-		}elseif (($tituloLibro != 'vacio') and ($nomBiblio != 'vacio')) { //Hay AMBOS filtros
-			$infoRepo['biblioteca'] = $nomBiblio;
+		}elseif (($tituloLibro != 'vacio') and ($usr != 'vacio')) { //Hay AMBOS filtros
+			$infoRepo['usr'] = $usr;
+			$idUsr = $this->modelos->obtenIdUser($usr);
 			$infoRepo['nomLibro'] = $tituloLibro;
 			//Obtener el autor de ese libro
 			$id_libro = $this->modelos->obtenIdLibro2($tituloLibro, 1);
-			$infoRepo['autores'] =$this->modelos->obtenAutores($id_libro, 1);
-			//Obtener la cantidad de un libro especifico en una biblioteca especifica 
-			$infoRepo['cantidad'] = $this->modelos->cuentaLibrosEnBiblio2($id_libro,$idBiblio);
+			//Obtener los prestamos de ese usuario, de ese libro
+			$infoRepo['infoPrestamo'] = $this->modelos->obtenInfoPrestamosLibroUsr($idUsr, $id_libro, 1);
+			for ($i=0; $i < count($infoRepo['infoPrestamo']); $i++) { 
+				$infoRepo['infoPrestamo'][$i]['biblioteca'] = $this->modelos->obtenBiblioPrestamo($infoRepo['infoPrestamo'][$i]['id_prestamo']);
+			}
+			//$infoPrestamo['biblioteca'] = $this->modelos->obtenBiblioPrestamo($infoRepo[$i]['infoPrestamo'][$j]['id_prestamo']);
 			$infoRepo['indicador'] = 3;
-			echo json_encode($infoRepo);
+			var_dump($infoRepo);
+			die();
 		}
 	}
 

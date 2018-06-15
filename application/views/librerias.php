@@ -170,7 +170,7 @@
   
 
 	body{
-    background-image: url(https://wallhere.com/es/wallpaper/161460);
+    background-image: url(http://www.hdfondos.eu/imagen/665625/star-wars-muerte-minimalista);
     background-position: center center;
 		background-repeat: no-repeat;
 		background-attachment: fixed;
