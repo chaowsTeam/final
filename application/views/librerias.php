@@ -170,13 +170,13 @@
   
 
 	body{
-    background-image: url(http://www.hdfondos.eu/imagen/665625/star-wars-muerte-minimalista);
+    background-image: url(http://www.hdfondos.eu/pictures/2014/0716/1/star-wars-minimalistic-death-pics-665625.jpg);
     background-position: center center;
 		background-repeat: no-repeat;
 		background-attachment: fixed;
 		background-size: cover;
 	}form{
-		color: black;
+		color: white;
 	}
 
 

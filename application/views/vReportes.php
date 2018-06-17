@@ -206,7 +206,6 @@ function repo4(){
       success: function(respuesta ){
         var registros = JSON.parse(respuesta);
         console.log('Registros: ');
-        console.log(registros);
         console.log(registros['indicador']);
         if(registros!=''){
 
@@ -215,77 +214,132 @@ function repo4(){
           }
 
           if(registros['indicador'] == 1){
-            html = "<table><td><label style='width: 50px; margin-left: 300px;' >Titulo: </label><input readonly value='"+registros["tituloLibro"]+"' class='form-control' type='text' name='titulo' id='titulo' style='width: 260px; margin-left: 300px; margin-bottom: 30px;'></td><td></input></table>";
+            html = "<table><td><label style='margin-left: 473px;' >Cantidad de pestamos Del: </label><input readonly value='"+registros["D_ini"]+"' class='form-control' type='text' name='D_ini' id='D_ini' style='width: 200px; margin-left: 473px; margin-bottom: 30px;'></td></input><td><label style='width: 50px; margin-left: 50px;' >Al: </label><input readonly value='"+registros["D_fin"]+"' class='form-control' type='text' name='D_fin' id='D_fin' style='width: 200px; margin-left: 50px; margin-bottom: 30px;'></td></input></table>";
 
-            html += "<table style='width: 600px;' class='table table-responsive table-bordered' align="+"center"+" id='tablita' ><thead>";
+            html += "<table style='width: 400px;' class='table table-responsive table-bordered' align="+"center"+" id='tablita' ><thead>";
 
-            html +="<tr><th>Usuario</th><th>Biblioteca</th><th>Fecha Prestamo</th><th>Fecha Devolucion</th></tr>";
+            html +="<tr><th>Usuario</th><th>Cant. Prestamos</th></tr>";
 
-              for (var i=0; i< (registros['length']); i++){
-                html+="<tr><td>"+registros[i]['nomUsr']+"</td><td></td><td></td><td></td>";
+              for (var i=0; i< registros['length']; i++){
+                html+="<tr><td>"+registros[i]['nomUsr']+"</td><td>"+registros[i]['cantPrestam']+"</td>";
 
                 html += "<input type='hidden' value='"+registros[i]['nomUsr']+"'name='usrs[]'></td>";
-
-                for(var j=0; j< registros[i]['infoPrestamo'].length; j++){
-                  html+="<tr><td></td><td>"+registros[i]['infoPrestamo'][j]['biblioteca']+"</td><td>"+registros[i]['infoPrestamo'][j]['fecha_prest']+"</td><td>"+registros[i]['infoPrestamo'][j]['fecha_dev']+"</td>";
-
-
-                  html += "<input type='hidden' value='"+registros[i]['infoPrestamo'][j]['biblioteca']+"'name='bibliotecas[]'></td>";
-                  html += "<input type='hidden' value='"+registros[i]['infoPrestamo'][j]['fecha_prest']+"'name='f_pres[]'></td>";
-                  html += "<input type='hidden' value='"+registros[i]['infoPrestamo'][j]['fecha_dev']+"'name='f_dev[]'></td>";
-                }
-                html +="<tr><th>Total</th><th></th><th></th><th>"+registros[i]['totalPrestam']+"</th></tr>";
-                html +="<input type='hidden' value='"+registros[i]['totalPrestam']+"'name='totalP[]'></td>";
-                
+                html += "<input type='hidden' value='"+registros[i]['cantPrestam']+"'name='cants[]'></td>";                                
               }
+
+              html +="<tr><th>Total</th><th>"+registros['TotalP']+"</th></tr>";
+              html +="<input type='hidden' value='"+registros['TotalP']+"'name='totalP'></td>";
             //html+="<tr><th>Total</th><th align='center'>"+registros[0]['total']+"</th>";
             //html += "<input type='hidden' value='"+registros[0]['total']+"'name='total'></td>";
           }
 
           if (registros['indicador'] == 2) {
-              html = "<table><td><label style='width: 50px; margin-left: 365px;' >Usuario: </label><input readonly value='"+registros["nomUsr"]+"' class='form-control' type='text' name='usuario' id='usuario' style='width: 260px; margin-left: 365px; margin-bottom: 30px;'></td><td></input><td></table>";
-
-              html += "<table id='tablita' style='width: 500px;' class='table table-responsive table-bordered' align="+"center"+"><thead>";
-
-              html +="<tr><th>Libro</th><th>Biblioteca</th><th>Fecha Prestamo</th><th>Fecha Devolución</th></th>";
-
-              for (var i=0; i< (registros['length']); i++){
-                html+="<tr><td>"+registros['infoPrestamo'][i]['tituloLibro']+"</td><td>"+registros['infoPrestamo'][i]['biblioteca']+"</td><td>"+registros['infoPrestamo'][i]['fecha_prest']+"</td><td>"+registros['infoPrestamo'][i]['fecha_dev']+"</td>";
-
-                html += "<input type='hidden' value='"+registros['infoPrestamo'][i]['tituloLibro']+"'name='titulos[]'></td>";
-                html += "<input type='hidden' value='"+registros['infoPrestamo'][i]['biblioteca']+"'name='biblios[]'></td>";
-                html += "<input type='hidden' value='"+registros['infoPrestamo'][i]['fecha_prest']+"'name='f_pres[]'></td>";
-                html += "<input type='hidden' value='"+registros['infoPrestamo'][i]['fecha_dev']+"'name='f_dev[]'></td>";                
-              }
-
-              html +="<tr><th>Total</th><th></th><th></th><th>"+registros['totalPrestam']+"</th></tr>";
-
-              html +="<input type='hidden' value='"+registros['totalPrestam']+"'name='totalP'></td>";
-          }
-
-          if (registros['indicador'] == 3) {
-            html = "<table id='tablita'><td><label style='margin-left: 250px;' >Prestamos del libro: </label></td><td><input readonly value='"+registros["nomLibro"]+"' class='form-control' type='text' name='nomL' id='nomL' style='width: 300px; margin-left: 15px; margin-bottom: 30px;'></td></input><td><label style='margin-left: 15px;' >Al usuario: </label></td><td><input readonly value='"+registros["usr"]+"' class='form-control' type='text' name='usr' id='usr' style='width: 150px; margin-bottom: 30px; margin-left: 20px;'></td><td><td></table>";
-
-            html += "<table id='tablita' style='width: 500px;' class='table table-responsive table-bordered' align="+"center"+"><thead>";
-
-            html +="<tr><th>Biblioteca</th><th>Fecha Prestamo</th><th>Fecha Devolución</th></th>";
-
-            for (var i = 0; i < registros['infoPrestamo'].length; i++ ) {
-              html+="<tr><td>"+registros['infoPrestamo'][i]['biblioteca']+"</td><td>"+registros['infoPrestamo'][i]['fecha_prest']+"</td><td>"+registros['infoPrestamo'][i]['fecha_dev']+"</td>";
-
-                html += "<input type='hidden' value='"+registros['infoPrestamo'][i]['biblioteca']+"'name='biblios[]'></td>";
-                html += "<input type='hidden' value='"+registros['infoPrestamo'][i]['fecha_prest']+"'name='f_pres[]'></td>";
-                html += "<input type='hidden' value='"+registros['infoPrestamo'][i]['fecha_dev']+"'name='f_dev[]'></td>";
-            }
-
-            html +="<tr><th>Total</th><th></th><th>"+registros['totalP']+"</th></th>";
-            html +="<input type='hidden' value='"+registros['totalP']+"'name='totalP'></td>";
-
+            html = "<table id='tablita'><td><label style='margin-left: 200px;' >Cantidad Prestamos al usuario: </label></td><td><input readonly value='"+registros["nomUsr"]+"' class='form-control' type='text' name='nomUser' id='nomUser' style='width: 120px; margin-left: 15px; margin-bottom: 30px;'></td></input><td><label style='margin-left: 15px;' >Del:  </label></td><td><input readonly value='"+registros["D_ini"]+"' class='form-control' type='text' name='D_ini' id='D_ini' style='width: 150px; margin-bottom: 30px; margin-left: 20px;'></td><td><label style='margin-left: 15px;' >Al:  </label></td><td><input readonly value='"+registros["D_fin"]+"' class='form-control' type='text' name='D_fin' id='D_fin' style='width: 150px; margin-bottom: 30px; margin-left: 20px;'></td><td><label style='margin-left:30px;'>--> </label></td><td><input readonly value='"+registros["cantPrestam"]+"' class='form-control' type='text' name='totaP' id='totalP' style='width: 150px; margin-bottom: 30px; margin-left: 20px;'></td></table>";
           }
         }
         html += "<input type='hidden' name='opcionhidden' id='opcionhidden' value="+registros['indicador']+">";
         //Mostrar la información en pantalla.
-        $("#muestraDatos5").html(html);
+        $("#muestraDatos4").html(html);
+      }      
+    });
+  }
+
+//33333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333
+function repo3(){
+    var tituloLibro3 = document.getElementById('tituloLibro3').value;
+    var nomBiblio3 = document.getElementById('nomBiblio3').value;
+    var D_i3 = document.getElementById('D_in3').value;
+    var D_f3 = document.getElementById('D_fin3').value;
+    console.log(tituloLibro3);
+    console.log(nomBiblio3);
+    console.log(D_i3);
+    console.log(D_f3);
+    $.ajax({
+      url:"http://localhost/final/index.php/ControladorPrincipal/generaRepo3",
+      type:"POST",
+      data:{tituloLibro3:tituloLibro3, nomBiblio3:nomBiblio3, D_i3:D_i3, D_f3:D_f3},
+      success: function(respuesta ){
+        var registros = JSON.parse(respuesta);
+        console.log('Registros: ');
+        console.log(registros);
+        if(registros!=''){
+
+          if (registros['indicador'] == 0) {
+            alert('Selecciona algún filtro (¡Fechas Obligatorias!)');
+          }
+          if(registros['indicador'] == 1){
+            html = "<table><td><label style='margin-left: 340px;' >Libro: </label><input readonly value='"+registros["titulo"]+"' class='form-control' type='text' name='tituloL' id='tituloL' style='width: 200px; margin-left: 340px; margin-bottom: 30px;'></td></input><td><label style='margin-left: 25px;' >Cantidad de pestamos Del: </label><input readonly value='"+registros["D_ini"]+"' class='form-control' type='text' name='D_ini' id='D_ini' style='width: 200px; margin-left: 25px; margin-bottom: 30px;'></td></input><td><label style='width: 50px; margin-left: 50px;' >Al: </label><input readonly value='"+registros["D_fin"]+"' class='form-control' type='text' name='D_fin' id='D_fin' style='width: 200px; margin-left: 50px; margin-bottom: 30px;'></td></input></table>";
+
+            html += "<table style='width: 600px;' class='table table-responsive table-bordered' align="+"center"+" id='tablita' ><thead>";
+
+            html +="<tr><th>Biblioteca</th><th>Nom. Empleado</th><th>Nom. Usuario</th><th>Fecha Prestamo</th><th>Fecha Devolución</th></tr>";
+
+              for (var i=0; i< registros['cantB']; i++){
+                html+="<tr><td>"+registros[i]['biblioteca']+"</td><td></td><td></td><td></td><td></td>";
+                html += "<input type='hidden' value='"+registros[i]['biblioteca']+"'name='biblios[]'></td>";
+
+                for (var j = 0; j < registros[i]['cantPrestam']; j++) {
+                  html+="<tr><td></td><td>"+registros[i]['infoPrestamo'][j]['nom_empleado']+"</td><td>"+registros[i]['infoPrestamo'][j]['nom_usuario']+"</td><td>"+registros[i]['infoPrestamo'][j]['fecha_prest']+"</td><td>"+registros[i]['infoPrestamo'][j]['fecha_dev']+"</td>";
+
+                  html += "<input type='hidden' value='"+registros[i]['infoPrestamo'][j]['nom_empleado']+"'name='empleados[]'></td>";
+                  html += "<input type='hidden' value='"+registros[i]['infoPrestamo'][j]['nom_usuario']+"'name='usuarios[]'></td>";
+                  html += "<input type='hidden' value='"+registros[i]['infoPrestamo'][j]['fecha_prest']+"'name='f_i[]'></td>";
+                  html += "<input type='hidden' value='"+registros[i]['infoPrestamo'][j]['fecha_dev']+"'name='f_f[]'></td>";
+                }
+
+                html+="<tr><th>Total</th><td></td><td></td><td></td><th>"+registros[i]['cantPrestam']+"</th>";
+                html += "<input type='hidden' value='"+registros[i]['cantPrestam']+"'name='cants[]'></td>";                                
+              }
+
+              html +="<tr><th>Total Global</th><td></td><td></td><td></td><td></td<th>"+registros['TotalP']+"</th></tr>";
+              html +="<input type='hidden' value='"+registros['TotalP']+"'name='totalP'></td>";
+            //html+="<tr><th>Total</th><th align='center'>"+registros[0]['total']+"</th>";
+            //html += "<input type='hidden' value='"+registros[0]['total']+"'name='total'></td>";
+          }
+
+          if (registros['indicador'] == 2) {
+            html = "<table><td><label style='margin-left: 340px;' >Biblioteca: </label><input readonly value='"+registros["biblioteca"]+"' class='form-control' type='text' name='biblio' id='biblio' style='width: 200px; margin-left: 340px; margin-bottom: 30px;'></td></input><td><label style='margin-left: 25px;' >Cantidad de pestamos Del: </label><input readonly value='"+registros["D_i"]+"' class='form-control' type='text' name='D_ini' id='D_ini' style='width: 200px; margin-left: 25px; margin-bottom: 30px;'></td></input><td><label style='width: 50px; margin-left: 50px;' >Al: </label><input readonly value='"+registros["D_f"]+"' class='form-control' type='text' name='D_fin' id='D_fin' style='width: 200px; margin-left: 50px; margin-bottom: 30px;'></td></input></table>";
+
+            html += "<table style='width: 600px;' class='table table-responsive table-bordered' align="+"center"+" id='tablita' ><thead>";
+
+            html +="<tr><th>Libro</th><th>Nom. Empleado</th><th>Nom. Usuario</th><th>Fecha Prestamo</th><th>Fecha Devolución</th></tr>";
+            
+              for (var i=0; i< (registros['prestamos']).length; i++){
+                html+="<tr><td>"+registros['prestamos'][i]['titulo']+"</td><td>"+registros['prestamos'][i]['nom_empleado']+"</td><td>"+registros['prestamos'][i]['nom_usuario']+"</td><td>"+registros['prestamos'][i]['fecha_prest']+"</td><td>"+registros['prestamos'][i]['fecha_dev']+"</td>";
+
+                html += "<input type='hidden' value='"+registros['prestamos'][i]['titulo']+"'name='titulos[]'></td>";
+                html += "<input type='hidden' value='"+registros['prestamos'][i]['nom_empleado']+"'name='empleados[]'></td>";
+                html += "<input type='hidden' value='"+registros['prestamos'][i]['nom_usuario']+"'name='usuarios[]'></td>";
+                html += "<input type='hidden' value='"+registros['prestamos'][i]['fecha_prest']+"'name='f_ps[]'></td>";
+                html += "<input type='hidden' value='"+registros['prestamos'][i]['fecha_dev']+"'name='f_ds[]'></td>";
+          }
+
+          html +="<tr><th>Total</th><th></th><th></th><th></th><th>"+registros['totalGlobal']+"</th></tr>";
+          html += "<input type='hidden' value='"+registros['totalGlobal']+"'name='totalG'></td>";
+
+        }
+
+        if (registros['indicador'] == 3) {
+          html = "<table id='tablita'><td><label style='margin-left: 60px;' >Prestamos del libro: </label></td><td><input readonly value='"+registros["titulo"]+"' class='form-control' type='text' name='titulo' id='titulo' style='width: 220px; margin-left: 15px; margin-bottom: 30px;'></td></input><td><label style='margin-left: 15px;' >En la biblioteca:  </label></td><td><input readonly value='"+registros["biblioteca"]+"' class='form-control' type='text' name='biblioteca' id='biblioteca' style='width: 150px; margin-bottom: 30px; margin-left: 20px;'></td><td><label style='margin-left: 15px;' >Del:  </label></td><td><input readonly value='"+registros["D_i"]+"' class='form-control' type='text' name='D_in' id='D_in' style='width: 150px; margin-bottom: 30px; margin-left: 20px;'></td><td><label style='margin-left:30px;'>Al:  </label></td><td><input readonly value='"+registros["D_f"]+"' class='form-control' type='text' name='D_f' id='D_f' style='width: 150px; margin-bottom: 30px; margin-left: 20px;'></td><td><label style='margin-left:30px;'> --->  </label></td><td><input readonly value='"+registros['prestamos'].length+"' class='form-control' type='text' name='totalG' id='totalG' style='width: 50px; margin-bottom: 30px; margin-left: 20px;'></td></table>";
+
+           html += "<table style='width: 600px;' class='table table-responsive table-bordered' align="+"center"+" id='tablita' ><thead>";
+
+            html +="<tr><th>Nom. Empleado</th><th>Nom. Usuario</th><th>Fecha Prestamo</th><th>Fecha Devolución</th></tr>";
+
+          for (var i = 0; i < registros['prestamos'].length; i++) {
+            html+="<tr><td>"+registros['prestamos'][i]['nom_empleado']+"</td><td>"+registros['prestamos'][i]['nom_usuario']+"</td><td>"+registros['prestamos'][i]['fecha_prest']+"</td><td>"+registros['prestamos'][i]['fecha_dev']+"</td>";
+
+            html += "<input type='hidden' value='"+registros['prestamos'][i]['nom_empleado']+"'name='empleados[]'></td>";
+            html += "<input type='hidden' value='"+registros['prestamos'][i]['nom_usuario']+"'name='usuarios[]'></td>";
+            html += "<input type='hidden' value='"+registros['prestamos'][i]['fecha_prest']+"'name='f_ps[]'></td>";
+            html += "<input type='hidden' value='"+registros['prestamos'][i]['fecha_dev']+"'name='f_ds[]'></td>";
+          }
+
+        }
+        }
+        html += "<input type='hidden' name='opcionhidden' id='opcionhidden' value="+registros['indicador']+">";
+        //Mostrar la información en pantalla.
+        $("#muestraDatos3").html(html);
       }      
     });
   }
@@ -487,7 +541,7 @@ function repo5(){
 
   <div id="div_1" class="contenido" class="container">
     <form method="post" action="fPDFRepo1" target="_blank" >
-      <table style="margin-top: 30px; margin-left: 355px;" >
+      <table style="margin-top: 30px; margin-left: 420px;" >
         <td>
           <select class="form-control" name="tituloLibro" id="tituloLibro" style="width: 200px;  margin-bottom: 50px; margin-right: 20px; margin-left: 54px;">
           <option value="vacio">Elige Titulo ... </option>
@@ -513,7 +567,7 @@ function repo5(){
         <!-- Este es el div en que se desplegara la consulta-->
       </div>
 
-      <table style="margin-top: 30px; margin-left: 335px;" >
+      <table style="margin-top: 30px; margin-left: 407px;" >
         <td>
           <input type="submit" value="GenerarPDF" class="botonRojo" style="width: 150px; margin-top: 10px;"></input> 
     </form>
@@ -529,7 +583,7 @@ function repo5(){
 <!--22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222-->
   <div id="div_2" class="contenido" class="container">
     <form method="post" action="fPDFRepo2" target="_blank" >
-      <table style="margin-top: 30px; margin-left: 155px;" >
+      <table style="margin-top: 30px; margin-left: 205px;" >
         <td>
           <select class="form-control" id="tituloLibro2" name="tituloLibro2" style="width: 200px;  margin-bottom: 50px; margin-right: 20px; margin-left: 24px;">
           <option value="vacio">Elige Titulo ... </option>
@@ -567,7 +621,7 @@ function repo5(){
         <!-- Este es el div en que se desplegara la consulta-->
       </div>
 
-      <table style="margin-top: 30px; margin-left: 350px;" >
+      <table style="margin-top: 30px; margin-left: 412px;" >
         <td>
           <input type="submit" value="GenerarPDF" class="botonRojo" style="width: 150px; margin-top: 10px;"></input> 
     </form>
@@ -582,8 +636,8 @@ function repo5(){
   </div>
 <!--3333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333-->
 <div id="div_3" class="contenido" class="container">
-    <form method="post" action="checaN" target="_blank" >
-      <table style="margin-top: 30px; margin-left: 155px;" >
+    <form method="post" action="fPDFRepo3" target="_blank" >
+      <table style="margin-top: 30px; margin-left: 200px;" >
         <td>
           <select class="form-control" id="tituloLibro3" name="tituloLibro3" style="width: 200px;  margin-bottom: 50px; margin-right: 20px; margin-left: 24px;">
           <option value="vacio">Elige Titulo ... </option>
@@ -607,13 +661,13 @@ function repo5(){
           <label style='margin-left: 25px; margin-bottom: 50px;' >De: </label>
         </td>
         <td>
-          <input required type="date" id="D_ini" name="D_ini" class="form-control" style="margin-left: 15px; margin-bottom: 50px;"></input>
+          <input required type="date" id="D_in3" name="D_in3" class="form-control" style="margin-left: 15px; margin-bottom: 50px;"></input>
         </td>
         <td>
           <label style='margin-left: 25px; margin-bottom: 50px;' >A: </label>
         </td>
         <td>
-          <input required type="date" id="D_fin" name="D_fin" class="form-control" style="margin-left: 25px; margin-bottom: 50px;"></input>
+          <input required type="date" id="D_fin3" name="D_fin3" class="form-control" style="margin-left: 25px; margin-bottom: 50px;"></input>
         </td>
       </table>
 
@@ -621,7 +675,7 @@ function repo5(){
         <!-- Este es el div en que se desplegara la consulta-->
       </div>
 
-      <table style="margin-top: 30px; margin-left: 350px;" >
+      <table style="margin-top: 30px; margin-left: 400px;" >
         <td>
           <input type="submit" value="GenerarPDF" class="botonRojo" style="width: 150px; margin-top: 10px;"></input> 
     </form>
@@ -637,8 +691,8 @@ function repo5(){
 
 <!--4444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444-->
 <div id="div_4" class="contenido" class="container">
-    <form method="post" action="checaN" target="_blank" >
-      <table style="margin-top: 30px; margin-left: 270px;" >
+    <form method="post" action="fPDFRepo4" target="_blank" >
+      <table style="margin-top: 30px; margin-left: 340px;" >
         <td>
           <select class="form-control" name="usr4" id="usr4" style="width: 200px; margin-bottom: 50px;">
             <option value="vacio">Elige Usuarios ... </option>
@@ -666,7 +720,7 @@ function repo5(){
         <!-- Este es el div en que se desplegara la consulta-->
       </div>
 
-      <table style="margin-top: 30px; margin-left: 350px;" >
+      <table style="margin-top: 30px; margin-left: 407px;" >
         <td>
           <input type="submit" value="GenerarPDF" class="botonRojo" style="width: 150px; margin-top: 10px;"></input> 
     </form>
@@ -682,7 +736,7 @@ function repo5(){
 <!--5555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555-->
 <div id="div_5" class="contenido" class="container">
     <form method="post" action="fPDFRepo5" target="_blank" >
-      <table style="margin-top: 30px; margin-left: 355px;" >
+      <table style="margin-top: 30px; margin-left: 425px;" >
         <td>
           <select class="form-control" name="tituloLibro5" id="tituloLibro5" style="width: 200px;  margin-bottom: 50px; margin-right: 20px; margin-left: 54px;">
           <option value="vacio">Elige Titulo ... </option>
@@ -708,7 +762,7 @@ function repo5(){
         <!-- Este es el div en que se desplegara la consulta-->
       </div>
 
-      <table style="margin-top: 30px; margin-left: 335px;" >
+      <table style="margin-top: 30px; margin-left: 407px;" >
         <td>
           <input type="submit" value="GenerarPDF" class="botonRojo" style="width: 150px; margin-top: 10px;"></input> 
     </form>
@@ -724,7 +778,7 @@ function repo5(){
 <!-- 6666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666-->
   <div id="div_6" class="contenido" class="container">
     <form method="post" action="fPDFRepo6" target="_blank">
-    <table style="margin-top: 30px; margin-left: 390px;" >
+    <table style="margin-top: 30px; margin-left: 465px;" >
         <td>
           <select class="form-control" name="nomBiblio6" id="nomBiblio6" style="width: 200px; margin-bottom: 50px;">
             <option value="vacio">Elige Biblioteca ... </option>
@@ -757,7 +811,7 @@ function repo5(){
       </div>
       <table>
         <td>
-            <input type="submit" value="GenerarPDF" class="botonRojo" style="width: 150px; margin-top: 10px; margin-left: 347px;"></input> 
+            <input type="submit" value="GenerarPDF" class="botonRojo" style="width: 150px; margin-top: 10px; margin-left: 407px;"></input> 
           </form>
         </td>
         <td>
@@ -770,7 +824,7 @@ function repo5(){
   </div>
 
 <form method="post" action="pPrincipal">
-      <input type="submit" value="Regresar" class="botonNaranja" style="width: 200px; margin-left: 530px; margin-top: 50px;"></input> 
+      <input type="submit" value="Regresar" class="botonNaranja" style="width: 200px; margin-left: 594px; margin-top: 50px;"></input> 
 </form>
 </body>
 </html>
