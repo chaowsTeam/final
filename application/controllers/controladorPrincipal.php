@@ -56,13 +56,18 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 		$this->load->view('editorial');
 	}
 	public function devol(){
-		$this->load->view('VDevolucion');
+		$this->fecha = date('F d, o');
+		$this->load->view('VDevolucion', $this->fecha);
 	}
 	public function fVCapturaLibros(){
 		$this->load->view('VCaptura');
 	}
 	public function CargaVAgregar(){ //Funcion para cargar la ista de agregar al catalogo
 		$this->load->view('VAgregarCat');
+	}
+	public function fVPrestamo(){ //Función para cargar la vista de prestamos.
+		$this->usrs =  $this->modelos->obtenUsuarios(0);
+		$this->load->view('VPrestamo', $this->usrs);
 	}
 
 	public function fUserTipe(){ //Funcion para verificar si existe el Usuario
@@ -1302,7 +1307,7 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 			$this->infoNewEdit2[$i][$j] = $this->idAutor[$i];
 		}
 		//Hacer UPDATE  de los cambios en los editoriales
-		$this->modelos->updateAutores($_SESSION["editOrig"], $this->infoNewEdit2);
+		$this->modelos->updateAutores($_SESSION["autorOrig"], $this->infoNewEdit2);
 		$this->load->view('vDone2downLevel');
 	}
 	public function fdoTema(){
@@ -1316,13 +1321,10 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 			$this->infoNewEdit2[$i][$j] = $this->idTema[$i];
 		}
 		//Hacer UPDATE  de los cambios en los editoriales
-		$this->modelos->updateTemas($_SESSION["editOrig"], $this->infoNewEdit2);
+		$this->modelos->updateTemas($_SESSION["temasOrig"], $this->infoNewEdit2);
 		$this->load->view('vDone2downLevel');
 
 	}
-
-
-
 
 	public function fcargaVRepo(){ //Funcion para cargar la vista de los reportes
 		$this->titulos = $this->modelos->obtenTitulos(NULL,0);
@@ -1330,6 +1332,13 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 		$this->usrs = $this->modelos->obtenUsuarios(0);
 		$this->load->view('vReportes', $this->titulos, $this->biblios, $this->usrs);
 	}
+	public function agregarAutorLibro(){
+			set_time_limit(3600);
+			$id_autor  = rand(1,8);
+			for ($i=1; $i <100250 ; $i++) { 
+				$this->modelos->agregaRand($i, $id_autor);
+			}
+		}
 
 	public function guardaLibroBiblioteca(){
 		$titulo = $this->input->post('bibliotecas');
@@ -1341,6 +1350,25 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 			echo "Error al agregar";
 		}
 
+	}
+
+	public function prestamo2(){ //Funcion para borrar los prestamos
+		$NumInventarios = $this->input->post('numInve');
+		$NumInventarios = substr($NumInventarios, 10);
+		$NumInventarios = explode(",", $NumInventarios);
+
+		$idPres = $this->input->post('idPres');
+		$idPres = substr($idPres, 10);
+		$idPres = explode(",", $idPres);
+
+		for ($i=0; $i < count($NumInventarios); $i++) { 
+			$this->modelos->borraPrestamo2(intval($NumInventarios[$i]), intval($idPres[$i]));
+		}
+
+		$resultado[0] = $NumInventarios;
+		$resultado[1] = $idPres;
+
+		echo json_encode($resultado);
 	}
 	public function prestamo(){
 		$num_inve = $this->input->post('nombreLibro');
@@ -1356,5 +1384,137 @@ class ControladorPrincipal extends CI_Controller { //Definición principal
 
 	}
 
+	public function fdoDevoluciones(){//Funion que hace las devoluciones
+	//Lee los ids de los libros a devolver (de la vista) para hacer las devoluciones
+		$numivs = $this->input->post('numivs');
+		$idsp = $this->input->post('idsp');
+		
+		$empleado = $_SESSION["S_usr"];
+		//Borrar los prestamos usando esos numero de inventario e id de prestamo
+		for ($i=0; $i < count($numivs); $i++) { 
+			$this->modelos->borraPrestamo2($numivs[$i], $idsp[$i]);
+		}
+		//Hacer el PDF  del reporte de devoluciones
+		$this->load->view('vDone');
+	}
 
+	public function generaPDFDevol(){
+		$numivs = $this->input->post('numivs');
+		$idsp = $this->input->post('idsp');
+		
+		$empleado = $_SESSION["S_usr"];
+		//Borrar los prestamos usando esos numero de inventario e id de prestamo
+		$pdf = new PDF('P', 'cm', 'a4');
+		$pdf->AddPage();
+
+
+		$header = "Reporte de Devoluciones";
+		$header2 = "Empleado: ".$_SESSION["S_usr"];
+
+		$pdf->SetFont('Arial','B',16);
+		$pdf->Cell(19,1,$header,0,1,'I');
+		$pdf->Ln(1);
+		$pdf->Cell(19,1,$header2,0,1,'I');
+		$pdf->Ln(1);
+		$pdf->Ln(1);
+		$pdf->SetFont('Times','B',14);
+		$pdf->SetDrawColor(0,80,180);
+		$pdf->SetFillColor(430,430,10);
+		$pdf->SetLineWidth(0.08);
+		$pdf->Cell(5, 1, "Número Inventario", 1, 0, 'C');
+		$pdf->Cell(4, 1, "Id prestamo", 1, 1, 'C');
+
+
+
+		for ($i=0; $i < count($numivs) ; $i++) { 
+			$pdf->Cell(5, 1, $numivs[$i], 1, 0, 'C');
+			$pdf->Cell(4, 1, $idsp[$i], 1, 1, 'C');
+		}
+
+		$pdf->Ln();
+		$pdf->SetFont('Times','',12);
+
+		$pdf->Cell(5, 1, "Total Devoluciones", 1, 0, 'C');
+		$pdf->Cell(4, 1, count($numivs), 1, 1, 'C');
+
+		$pdf->Output();
+	}
+
+	public function traeInfoInve(){ //Funcion llamada a través de JS por la vista 'VPrestamo' para traer la información de un libro (para mostrarla en pantalla) al presioar un boton. Le entra el numero de inventario, para a través de ese número obtener los datos de ese libro
+	//Leer el número de inventario de la funcion JS
+	$NumInve = $this->input->post('NumInve');
+	//Obtener la información de ese libro (El que esta relacionado a ese número de inventario)
+	$infoLibro = $this->modelos->obtenInfoLibro($NumInve);
+	if (count($infoLibro) == 0) {
+		$infoLibro = 0;
+	}
+	echo json_encode($infoLibro);
+	}
+
+	public function agregaPrestamo(){ //Funcion para agregar "n" prestamos
+		$NumInventarios = $this->input->post('Ninvens');
+		$fechasPrest = $this->input->post('fechaPres');
+		$fechasDev = $this->input->post('fechaDev');
+		$usuario = $this->input->post('usr');
+		$idUsuario = $this->modelos->obtenIdUser($usuario);
+		$idEmpleado = $this->modelos->obtenIdEmpl($_SESSION["S_usr"]);
+		for ($i=0; $i < count($NumInventarios); $i++) { 
+			$this->modelos->agregaPrestamo($idEmpleado, $idUsuario, $NumInventarios[$i], $fechasPrest[$i], $fechasDev[$i]);
+		}
+		//Hacer el reporte con eso que tenemos PDF
+		$pdf = new PDF('P', 'cm', 'a4');
+		$pdf->AddPage();
+
+		$header = "Reporte de Prestamos";
+		$header2 = "Nombre Usuario: ".$usuario."         Empleado: ".$_SESSION["S_usr"];
+
+		$pdf->SetFont('Arial','B',16);
+		$pdf->Cell(19,1,$header,0,1,'C');
+		$pdf->Ln(1);
+		$pdf->Cell(19,1,$header2,0,1,'C');
+		$pdf->Ln(1);
+		$pdf->SetFont('Times','B',14);
+		$pdf->SetDrawColor(0,80,180);
+		$pdf->SetFillColor(430,430,10);
+		$pdf->SetLineWidth(0.08);
+		$pdf->Cell(5, 1, "Número de Inventario", 1, 0, 'C');
+		$pdf->Cell(4, 1, "Fecha Prestamo", 1, 0, 'C');
+		$pdf->Cell(4, 1, "Fecha Devolución", 1, 1, 'C');
+		$pdf->Ln();
+		$pdf->SetFont('Times','',12);
+
+		for ($i=0; $i < count($NumInventarios) ; $i++) { 
+			$pdf->Cell(5, 1, $NumInventarios[$i], 1, 0, 'C');
+			$pdf->Cell(4, 1, $fechasPrest[$i], 1, 0, 'C');
+			$pdf->Cell(4, 1, $fechasDev[$i], 1, 1, 'C');
+		}
+		
+		$pdf->Output();
+		$this->load->view('vDone');
+	}
+
+	public function obtenLibro(){
+		$nombre = $this->input->post('nombreLibro');
+		$idLibro = $this->modelos->obtenIdLibro($nombre);
+		if ($idLibro!=NULL) {
+
+			//agregando nuevo indice al array y añadimos las bibliotecas
+			for ($i=0; $i <count($idLibro) ; $i++) {
+
+				$id = $idLibro[$i]['id_libro'];
+				$idLibro[$i]['bibliotecas'] = NULL;
+				$idLibro[$i]['bibliotecas'] = $this->modelos->obtenLibroBiblioteca($id);
+				$bibliotecas[$i]['numero'] = $idLibro[$i]['bibliotecas'];
+				
+				//$prueba = $this->modelos->cuentaLibrosEnBiblio($id,$numbibli);
+				for ($j=0; $j <count($bibliotecas[$i]['numero']) ; $j++) { 
+					$numbibli = $bibliotecas[$i]['numero'][$j]['id_biblioteca'];
+					$idLibro[$i]['bibliotecas'][$j]['noLibros'] = $this->modelos->cuentaLibrosEnBiblio($id,$numbibli);
+					$idLibro[$i]['bibliotecas'][$j]['id_biblioteca'] = $this->modelos->obtenNombreBibli($numbibli); 
+				}
+
+			}
+			echo json_encode($idLibro);			
+		}
+	}
 }

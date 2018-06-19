@@ -65,7 +65,7 @@ $(document).ready(function(){
   </tbody>
 </table>
 
-<button style="margin-left: 470px;" type="button" id="nuevalinea" class="botonAzul">Agregar Editorial</button>
+<button style="margin-left: 470px;" type="button" id="nuevalinea" class="botonAzul">Agregar Tema</button>
 <input type="submit" name="guardar" class="botonVerde" value="Guardar Cambios">
 </form>
 

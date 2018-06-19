@@ -120,7 +120,7 @@
           }
 
           if (registros['indicador'] == 3) {
-            html = "<table id='tablita'><td><label style='margin-left: 250px;' >Hay: </label></td><td><input readonly value='"+registros["cantidad"]+"' class='form-control' type='text' name='cantidadL' id='cantidadL' style='width: 40px; margin-left: 30px; margin-bottom: 30px;'></td></input><td><label style='margin-left: 15px;' >Ejemplares de: </label></td><td><input readonly value='"+registros["nomLibro"]+"' class='form-control' type='text' name='nomL' id='nomL' style='width: 250px; margin-bottom: 30px; margin-left: 20px;'></td><td><td><label style='margin-left: 15px;' >En la biblioteca: </label></td><td><input readonly value='"+registros["biblioteca"]+"' class='form-control' type='text' name='biblioteca' id='biblioteca' style='width: 150px; margin-left: 20px; margin-bottom: 30px;'></td></table>";
+            html = "<table id='tablita'><td><label style='margin-left: 250px;' >Hay: </label></td><td><input readonly value='"+registros["cantidad"]+"' class='form-control' type='text' name='cantidadL' id='cantidadL' style='width: 80px; margin-left: 30px; margin-bottom: 30px;'></td></input><td><label style='margin-left: 15px;' >Ejemplares de: </label></td><td><input readonly value='"+registros["nomLibro"]+"' class='form-control' type='text' name='nomL' id='nomL' style='width: 250px; margin-bottom: 30px; margin-left: 20px;'></td><td><td><label style='margin-left: 15px;' >En la biblioteca: </label></td><td><input readonly value='"+registros["biblioteca"]+"' class='form-control' type='text' name='biblioteca' id='biblioteca' style='width: 150px; margin-left: 20px; margin-bottom: 30px;'></td></table>";
           }
         }
         html += "<input type='hidden' name='opcionhidden' id='opcionhidden' value="+registros['indicador']+">";
@@ -181,7 +181,7 @@
           }
 
           if (registros['indicador'] == 3) {
-            html = "<table id='tablita'><td><label style='margin-left: 35px;' >Hay: </label></td><td><input readonly value='"+registros["cantPrestam"]+"' class='form-control' type='text' name='cantidadL' id='cantPrestam' style='width: 40px; margin-left: 25px; margin-bottom: 30px;'></td></input><td><label style='margin-left: 15px;' >Prestamos de: </label></td><td><input readonly value='"+registros["nomLibro"]+"' class='form-control' type='text' name='nomL' id='nomL' style='width: 250px; margin-bottom: 30px; margin-left: 20px;'></td><td><td><label style='margin-left: 15px;' >En la biblioteca: </label></td><td><input readonly value='"+registros["biblioteca"]+"' class='form-control' type='text' name='biblioteca' id='biblioteca' style='width: 130px; margin-left: 20px; margin-bottom: 30px;'></td></input><td><label style='margin-left: 15px;' >Del: </label></td><td><input readonly value='"+registros["D_ini"]+"' class='form-control' type='text' name='D_i' id='D_i' style='width: 100px; margin-left: 25px; margin-bottom: 30px;'></td></input><td><label style='margin-left: 15px;' >Al: </label></td><td><input readonly value='"+registros["D_fin"]+"' class='form-control' type='text' name='D_fin' id='D_fin' style='width: 100px; margin-left: 25px; margin-bottom: 30px;'></td></input></table>";
+            html = "<table id='tablita'><td><label style='margin-left: 35px;' >Hay: </label></td><td><input readonly value='"+registros["cantPrestam"]+"' class='form-control' type='text' name='cantidadL' id='cantPrestam' style='width: 80px; margin-left: 25px; margin-bottom: 30px;'></td></input><td><label style='margin-left: 15px;' >Prestamos de: </label></td><td><input readonly value='"+registros["nomLibro"]+"' class='form-control' type='text' name='nomL' id='nomL' style='width: 250px; margin-bottom: 30px; margin-left: 20px;'></td><td><td><label style='margin-left: 15px;' >En la biblioteca: </label></td><td><input readonly value='"+registros["biblioteca"]+"' class='form-control' type='text' name='biblioteca' id='biblioteca' style='width: 130px; margin-left: 20px; margin-bottom: 30px;'></td></input><td><label style='margin-left: 15px;' >Del: </label></td><td><input readonly value='"+registros["D_ini"]+"' class='form-control' type='text' name='D_i' id='D_i' style='width: 100px; margin-left: 25px; margin-bottom: 30px;'></td></input><td><label style='margin-left: 15px;' >Al: </label></td><td><input readonly value='"+registros["D_fin"]+"' class='form-control' type='text' name='D_fin' id='D_fin' style='width: 100px; margin-left: 25px; margin-bottom: 30px;'></td></input></table>";
           }
         }
         html += "<input type='hidden' name='opcionhidden' id='opcionhidden' value="+registros['indicador']+">";
@@ -499,7 +499,7 @@ function repo5(){
           }
 
           if (registros['indicador'] == 3) {
-            html = "<table id='tablita'><td><label style='margin-left: 315px;' >Hay: </label></td><td><input readonly value='"+registros["noPrestamos"]+"' class='form-control' type='text' name='noPrestamos' id='noPrestamos' style='width: 40px; margin-left: 30px; margin-bottom: 30px;'></td></input><td><label style='margin-left: 15px; width:200px;' >Prestamos en el mes de: </label></td><td><input readonly value='"+registros["mes"]+"' class='form-control' type='text' name='mes' id='mes' style='width: 250px; margin-bottom: 15px; margin-left: 10px;'></td><td><td><label style='margin-left: 15px;' >En la biblioteca: </label></td><td><input readonly value='"+registros["biblioteca"]+"' class='form-control' type='text' name='biblioteca' id='biblioteca' style='width: 150px; margin-left: 20px; margin-bottom: 30px;'></td></table>";
+            html = "<table id='tablita'><td><label style='margin-left: 315px;' >Hay: </label></td><td><input readonly value='"+registros["noPrestamos"]+"' class='form-control' type='text' name='noPrestamos' id='noPrestamos' style='width: 80px; margin-left: 30px; margin-bottom: 30px;'></td></input><td><label style='margin-left: 15px; width:200px;' >Prestamos en el mes de: </label></td><td><input readonly value='"+registros["mes"]+"' class='form-control' type='text' name='mes' id='mes' style='width: 250px; margin-bottom: 15px; margin-left: 10px;'></td><td><td><label style='margin-left: 15px;' >En la biblioteca: </label></td><td><input readonly value='"+registros["biblioteca"]+"' class='form-control' type='text' name='biblioteca' id='biblioteca' style='width: 150px; margin-left: 20px; margin-bottom: 30px;'></td></table>";
           }
         }
         html += "<input type='hidden' name='opcionhidden' id='opcionhidden' value="+registros['indicador']+">";
@@ -824,7 +824,7 @@ function repo5(){
   </div>
 
 <form method="post" action="pPrincipal">
-      <input type="submit" value="Regresar" class="botonNaranja" style="width: 200px; margin-left: 594px; margin-top: 50px;"></input> 
+      <input type="submit" value="Regresar" class="botonNaranja" style="width: 200px; margin-left: 585px; margin-top: 50px;"></input> 
 </form>
 </body>
 </html>

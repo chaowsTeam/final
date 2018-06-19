@@ -64,7 +64,7 @@ caption {
     background: #000;
 }
 th,tr,td {
-   background: #FBFBFB;
+   background: black;
 }
 </style>
 <script type="text/javascript">
@@ -78,6 +78,7 @@ th,tr,td {
         data:{nombreLibro:libro},
         success: function(respuesta){
              registros = eval(respuesta);
+             console.log(registros);
             //console.log(variable[0]['titulo']); aqui se obtiene el nombre
             //console.log(variable[0]['bibliotecas'][0]); accede al un dato de un biblioteca
             //console.log(variable[0]['bibliotecas'][0]['id_biblioteca']); accede al nombre de una biblioteca 
@@ -142,19 +143,16 @@ th,tr,td {
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Biblioteca</a>
-
-
 
       <form method="post" action="fUserTipe">
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
+            <a class="navbar-brand" href="#">Biblioteca</a>
             <li class="active"><a href="#">Busqueda</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-            <li><input placeholder="Usuario" type="text" required name="usr"  id="usr" style="margin-top: 10px; width: 190px;margin-left: 200px;" class="form-control"></li>
-            <li><input placeholder="Contraseña" type="password" required name="psw" id="psws" style="margin-top: 10px; width: 190px; margin-left: 20px; margin-bottom: 10px; margin-right: 20px;" class="form-control"></li>
-            <li><input type="submit" value="Ingresar" class="botonVerde" style="margin-top: 10px;"></li>
+            <li><a href="#about">Información</a></li>
+            <li><input placeholder="Usuario" type="text" required name="usr"  id="usr" style="margin-top: 15px; width: 190px;margin-left: 200px;" class="form-control"></li>
+            <li><input placeholder="Contraseña" type="password" required name="psw" id="psws" style="margin-top: 15px; width: 190px; margin-left: 20px; margin-bottom: 10px; margin-right: 20px;" class="form-control"></li>
+            <li><input type="submit" value="Ingresar" class="botonVerde" style="margin-top: 15px;"></li>
           </ul>
 
         </div>
@@ -193,7 +191,7 @@ th,tr,td {
         <tr>
             <span class="label label-default" for = "xbi">Titulo del libro</span></td>
             <td><input type="text" name="libro" id="libro" class="form-control" size="50"></td>
-             <td><input type="button" class="btn-control" value="Buscar" onclick="buscaLibro()"></td>
+             <td><input type="button" class="botonNaranja" value="Buscar" onclick="buscaLibro()"></td>
         </tr>
         <tr>
                         

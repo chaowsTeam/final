@@ -110,7 +110,7 @@ div.row {
 		<table align="center">
 	
   	  		<td align="center" style="padding: 30px">
-   		 		<input   type="submit" value="Regresar" class="botonRojo" style="width: 200px;"></input>
+   		 		<input   type="submit" value="Regresar" class="botonNaranja" style="width: 200px;"></input>
    		 	</td>
 	</form>
 
@@ -119,19 +119,29 @@ div.row {
 
 <div class="row" >
       <div class="col-lg-4" >
-        <table>
+        <!--<table>
         <tr>
-            <td><label for="libro"><span class="label label-default" for = "libro">Codigo del libro</span></td></label>
-            <td><input type="text" name="libro" id="libro" class="form-control" size="50"></td>
-             
+          <td><label for="libro"><span class="label label-default" for = "libro">Codigo del libro</span></td></label>
+          <td>
+            <input type="text" name="libro" id="libro" class="form-control" size="50">
+          </td>
         </tr>
+        
         <tr>
-             <td><label for="prestamo"><span class="label label-default" for = "libro">Codigo del prestamo</span></td></label>
-            <td><input type="text" name="prestamo" id="prestamo" class="form-control" size="50"></td>           
-       
-          <td><input type="button" class="btn-control" value="Buscar" onclick="buscaLibro()"></td>
+          <td>
+            <label for="prestamo"><span class="label label-default" for = "libro">Codigo del prestamo</span></td></label>
+            <td>
+              <input type="text" name="prestamo" id="prestamo" class="form-control" size="50">
+            </td>           
         </tr>
+
+        <tr>
+          <td>
+            <input type="button" class="botonNaranja" value="Devolver" onclick="buscaLibro()">
+          </td>
+        </tr>        
         </table>
+      -->
        
       </div>
   </div>

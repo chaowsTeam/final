@@ -42,14 +42,7 @@
         <input type="submit" value="Captura de libros" class="botonVerde" style="width: 200px;"></input>
       </td>
   </form>
-  <form method= "post" action="loadViewI">
-    <table align="center">
-    <tr> 
-      <td align="center" style="padding: 10px">
-        <input type="submit" value="Inventario" class="botonVerde" style="width: 200px;"></input>
-      </td>
-  </form>
-
+ 
 	<form method= "post" action="fVPrestamo">
 		<table align="center">
 		<tr> 
@@ -58,8 +51,7 @@
    		</td>
   </form>
 
-
-	<form method= "post" action="devol">
+  <form method= "post" action="devol">
 		<table align="center">
 		<tr>   		
   	  		<td align="center" style="padding: 10px">
@@ -67,8 +59,6 @@
    		 		<input type="submit" value="Devoluciones" class="botonVerde" style="width: 200px;"></input>
    		 	</td>
 	</form>
-
-
 
 	<form method= "post" action="fcargaVRepo">
 		<table align="center">
